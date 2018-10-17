@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+group = 'com.gmail.eksuzyan.pavel.money.transfer'
+version = getProperty('app.version')
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar.doFirst {
+    manifest {
+        attributes(
+                "Build-Project": rootProject.name,
+                "Build-Project-Name": project.name,
+                "Build-Project-Group": project.group,
+                "Build-Project-Version": project.version,
+                "Build-By-Name-User": getProperty('app.built.by.user'),
+                "Build-By-Name-Full": getProperty('app.built.by.name'),
+                "Build-Gradle-Version": gradle.gradleVersion,
+                "Build-Jdk-Version": JavaVersion.current(),
+                "Build-Created": new Date().format('yyyy-MM-dd HH:mm'),
+                "Main-Class": 'com.gmail.eksuzyan.pavel.money.transfer.Simulator',
+                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+        )
+    }
+}

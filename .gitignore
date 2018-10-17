@@ -1,0 +1,19 @@
+# Build artifacts
+
+**/.gradle
+**/build
+**/out
+
+# IDE artifacts
+
+**/.idea
+
+# Application logs
+
+**/logs
+
+# Other
+
+**/config.xml
+**/config-test.xml
+cred.txt
