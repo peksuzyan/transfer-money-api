@@ -31,7 +31,8 @@ public class AccountService {
         try {
             datastore.createAccount(account);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not create an account " + accountNum + ". Reason: ", e);
+            throw new BusinessException(
+                    "Could not create an account '" + accountNum + "'. Reason: " + e.getMessage(), e);
         }
 
         return account;
@@ -41,7 +42,8 @@ public class AccountService {
         try {
             return datastore.getAccount(accountNum);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not get an account " + accountNum + ". Reason: ", e);
+            throw new BusinessException(
+                    "Could not get an account '" + accountNum + "'. Reason: " + e.getMessage(), e);
         }
     }
 
@@ -53,9 +55,9 @@ public class AccountService {
 
             return account;
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not delete an account " + accountNum + ". Reason: ", e);
+            throw new BusinessException(
+                    "Could not delete an account '" + accountNum + "'. Reason: " + e.getMessage(), e);
         }
-
     }
 
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
@@ -66,7 +68,7 @@ public class AccountService {
             toAccount = datastore.getAccount(toAccountNum);
         } catch (DatastoreException e) {
             throw new BusinessException("Could not transfer money from '" + fromAccountNum + "' to '" +
-                    toAccountNum + "'. Reason: ", e);
+                    toAccountNum + "'. Reason: " + e.getMessage(), e);
         }
 
         final int fromAccountHash = identityHashCode(fromAccount);
@@ -98,7 +100,7 @@ public class AccountService {
     private static void transferMoneyWithoutBlock(Account fromAccount, Account toAccount, double amount) {
         if (fromAccount.getAmount() < amount)
             throw new BusinessException("Could not transfer from '" + fromAccount.getNumber() + "' to '" +
-                    toAccount.getNumber() + "'. Reason: not enough money. ");
+                    toAccount.getNumber() + "'. Reason: Not enough money. ");
 
         toAccount.withdraw(amount);
         fromAccount.deposit(amount);
