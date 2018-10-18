@@ -11,6 +11,6 @@ public class BusinessException extends RuntimeException {
     }
 
     public BusinessException(String message, Throwable cause) {
-        super(message, cause, true, false);
+        super(message, cause, false, false);
     }
 }
