@@ -14,7 +14,6 @@ import static java.lang.System.identityHashCode;
 public class AccountService {
 
     private final AccountDatastore datastore;
-    private final Object tieLock = new Object();
 
     public AccountService() {
         this(new AccountDatastore());
@@ -60,7 +59,6 @@ public class AccountService {
         }
     }
 
-    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public void transferMoney(String fromAccountNum, String toAccountNum, double amount) {
         Account fromAccount, toAccount;
         try {
@@ -72,40 +70,7 @@ public class AccountService {
                             toAccountNum + "'. Reason: " + e.getMessage(), e);
         }
 
-        final int fromAccountHash = identityHashCode(fromAccount);
-        final int toAccountHash = identityHashCode(toAccount);
-
-        if (fromAccountHash < toAccountHash) {
-            synchronized (fromAccount) {
-                synchronized (toAccount) {
-                    transferMoneyWithoutBlock(fromAccount, toAccount, amount);
-                }
-            }
-        } else if (fromAccountHash > toAccountHash) {
-            synchronized (toAccount) {
-                synchronized (fromAccount) {
-                    transferMoneyWithoutBlock(fromAccount, toAccount, amount);
-                }
-            }
-        } else {
-            synchronized (tieLock) {
-                synchronized (fromAccount) {
-                    synchronized (toAccount) {
-                        transferMoneyWithoutBlock(fromAccount, toAccount, amount);
-                    }
-                }
-            }
-        }
-    }
-
-    private static void transferMoneyWithoutBlock(Account fromAccount, Account toAccount, double amount) {
-        if (fromAccount.getAmount() < amount)
-            throw new BusinessException(
-                    "Could not transfer from '" + fromAccount.getNumber() + "' to '" +
-                            toAccount.getNumber() + "'. Reason: Not enough money. ");
-
-        toAccount.withdraw(amount);
-        fromAccount.deposit(amount);
+        fromAccount.transferTo(toAccount, amount);
     }
 
 }

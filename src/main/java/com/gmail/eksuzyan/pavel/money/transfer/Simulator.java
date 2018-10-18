@@ -69,7 +69,7 @@ public class Simulator implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-        try (Simulator simulator = new Simulator(5, 100, 1L)) {
+        try (Simulator simulator = new Simulator(5, 100_000, 1L)) {
             simulator.simulate();
         } catch (Exception e) {
             e.printStackTrace();
