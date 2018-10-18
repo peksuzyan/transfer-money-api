@@ -7,6 +7,7 @@ import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,6 +17,7 @@ import java.util.stream.IntStream;
 
 import static java.lang.Math.random;
 import static java.lang.String.format;
+import static java.util.Objects.nonNull;
 
 /**
  * @author Pavel Eksuzian.
@@ -24,7 +26,6 @@ import static java.lang.String.format;
 public class Simulator implements AutoCloseable {
 
     private static final String HEADLINE_PATTERN = "============== Requesting '%s' ==============";
-//    private static final String FINISH_OUTPUT_PATTERN = "============== Finish to request '%s' ==============";
 
     private static final Format ACCOUNT_NUMBER_FORMATTER = new DecimalFormat("ACC-0000");
 
@@ -45,7 +46,17 @@ public class Simulator implements AutoCloseable {
     private final CountDownLatch latchOnGet;
     private final CountDownLatch latchOnDelete;
 
+    private final Random randomizer;
+
     private Simulator(int totalAccounts, int totalTransfers) {
+        this(totalAccounts, totalTransfers, null);
+    }
+
+    private Simulator(int totalAccounts, int totalTransfers, long randomizerInitState) {
+        this(totalAccounts, totalTransfers, new Random(randomizerInitState));
+    }
+
+    private Simulator(int totalAccounts, int totalTransfers, Random randomizer) {
         this.totalAccounts = totalAccounts;
         this.totalTransfers = totalTransfers;
 
@@ -53,10 +64,12 @@ public class Simulator implements AutoCloseable {
         this.latchOnTransfer = new CountDownLatch(totalTransfers);
         this.latchOnGet = new CountDownLatch(totalAccounts);
         this.latchOnDelete = new CountDownLatch(totalAccounts);
+
+        this.randomizer = nonNull(randomizer) ? randomizer : new Random();
     }
 
     public static void main(String[] args) {
-        try (Simulator simulator = new Simulator(5, 100)) {
+        try (Simulator simulator = new Simulator(5, 100, 1L)) {
             simulator.simulate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +78,7 @@ public class Simulator implements AutoCloseable {
 
     @SuppressWarnings("WeakerAccess")
     public void simulate() throws InterruptedException {
-        List<String> accountNums = generateTestAccounts(totalAccounts);
+        List<String> accountNums = generateTestAccounts();
 
         requestCreate(accountNums);
         requestTransfer(accountNums);
@@ -85,7 +98,6 @@ public class Simulator implements AutoCloseable {
 
         latchOnCreate.await();
         System.out.println();
-//        System.out.println(format(FINISH_OUTPUT_PATTERN, "CREATE"));
     }
 
     private void requestTransfer(List<String> accountNums) throws InterruptedException {
@@ -98,7 +110,6 @@ public class Simulator implements AutoCloseable {
 
         latchOnTransfer.await();
         System.out.println();
-//        System.out.println(format(FINISH_OUTPUT_PATTERN, "TRANSFER"));
     }
 
     private void requestGet(List<String> accountNums) throws InterruptedException {
@@ -110,7 +121,6 @@ public class Simulator implements AutoCloseable {
 
         latchOnGet.await();
         System.out.println();
-//        System.out.println(format(FINISH_OUTPUT_PATTERN, "GET"));
     }
 
     private void requestDelete(List<String> accountNums) throws InterruptedException {
@@ -122,22 +132,21 @@ public class Simulator implements AutoCloseable {
 
         latchOnDelete.await();
         System.out.println();
-//        System.out.println(format(FINISH_OUTPUT_PATTERN, "DELETE"));
     }
 
-    private static List<String> generateTestAccounts(int totalAccounts) {
+    private List<String> generateTestAccounts() {
         return IntStream
                 .rangeClosed(1, totalAccounts)
                 .mapToObj(ACCOUNT_NUMBER_FORMATTER::format)
                 .collect(Collectors.toList());
     }
 
-    private static int generateInitialAmount() {
-        return (int) (random() * MAX_INITIAL_AMOUNT);
+    private int generateInitialAmount() {
+        return randomizer.nextInt(MAX_INITIAL_AMOUNT);
     }
 
-    private static int generateTransferAmount() {
-        return (int) (random() * MAX_TRANSFER_AMOUNT + 1);
+    private int generateTransferAmount() {
+        return randomizer.nextInt(MAX_TRANSFER_AMOUNT) + 1;
     }
 
     @Override
