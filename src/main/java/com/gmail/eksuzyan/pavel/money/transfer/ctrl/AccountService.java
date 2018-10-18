@@ -7,10 +7,13 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreExcepti
 
 import static java.lang.System.identityHashCode;
 
+/**
+ * @author Pavel Eksuzian.
+ *         Created: 10/17/2018.
+ */
 public class AccountService {
 
     private final AccountDatastore datastore;
-
     private final Object tieLock = new Object();
 
     public AccountService() {

@@ -1,5 +1,9 @@
 package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
 
+/**
+ * @author Pavel Eksuzian.
+ *         Created: 10/17/2018.
+ */
 public class AccountWrapper {
 
     public AccountWrapper(String number, double amount) {

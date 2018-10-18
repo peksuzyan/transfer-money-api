@@ -6,6 +6,10 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreExcepti
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * @author Pavel Eksuzian.
+ *         Created: 10/17/2018.
+ */
 public class AccountDatastore {
 
     private final ConcurrentMap<String, Account> userAccounts = new ConcurrentHashMap<>();

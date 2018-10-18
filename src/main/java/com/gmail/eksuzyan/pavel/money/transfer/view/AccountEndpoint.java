@@ -3,9 +3,14 @@ package com.gmail.eksuzyan.pavel.money.transfer.view;
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
 import java.util.Objects;
 
+/**
+ * @author Pavel Eksuzian.
+ *         Created: 10/17/2018.
+ */
 public class AccountEndpoint {
 
     private final AccountService service;
@@ -49,7 +54,7 @@ public class AccountEndpoint {
         return new AccountWrapper(account.getNumber(), account.getAmount());
     }
 
-    public void transferMoney(String fromAccountNum, String toAccountNum, double amount) {
+    public TransactionWrapper transferMoney(String fromAccountNum, String toAccountNum, double amount) {
         if (fromAccountNum == null || fromAccountNum.trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
@@ -63,6 +68,8 @@ public class AccountEndpoint {
             throw new IllegalArgumentException("Transfer amount cannot be negative or zero. ");
 
         service.transferMoney(fromAccountNum, toAccountNum, amount);
+
+        return new TransactionWrapper(fromAccountNum, toAccountNum, amount);
     }
 
 }

@@ -2,6 +2,7 @@ package com.gmail.eksuzyan.pavel.money.transfer;
 
 import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -14,8 +15,16 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.lang.Math.random;
+import static java.lang.String.format;
 
+/**
+ * @author Pavel Eksuzian.
+ *         Created: 10/17/2018.
+ */
 public class Simulator implements AutoCloseable {
+
+    private static final String HEADLINE_PATTERN = "============== Requesting '%s' ==============";
+//    private static final String FINISH_OUTPUT_PATTERN = "============== Finish to request '%s' ==============";
 
     private static final Format ACCOUNT_NUMBER_FORMATTER = new DecimalFormat("ACC-0000");
 
@@ -48,61 +57,77 @@ public class Simulator implements AutoCloseable {
 
     public static void main(String[] args) {
         try (Simulator simulator = new Simulator(5, 100)) {
-            simulator.start();
+            simulator.simulate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void start() throws InterruptedException {
+    public void simulate() throws InterruptedException {
         List<String> accountNums = generateTestAccounts(totalAccounts);
 
         requestCreate(accountNums);
-        latchOnCreate.await();
-
         requestTransfer(accountNums);
-        latchOnTransfer.await();
-
         requestGet(accountNums);
-        latchOnGet.await();
-
         requestDelete(accountNums);
-        latchOnDelete.await();
 
         System.out.println("Total initial amount: " + totalInitialAmount.get());
         System.out.println("Total finite amount: " + totalFiniteAmount.get());
     }
 
-    private void requestCreate(List<String> accountNums) {
+    private void requestCreate(List<String> accountNums) throws InterruptedException {
+        System.out.println(format(HEADLINE_PATTERN, "CREATE"));
+
         for (String accountNum : accountNums) {
             threadPool.execute(new CreateTask(accountNum, generateInitialAmount()));
         }
+
+        latchOnCreate.await();
+        System.out.println();
+//        System.out.println(format(FINISH_OUTPUT_PATTERN, "CREATE"));
     }
 
-    private void requestTransfer(List<String> accountNums) {
-        final TransferTaskFactory taskFactory = new TransferTaskFactory(accountNums);
+    private void requestTransfer(List<String> accountNums) throws InterruptedException {
+        System.out.println(format(HEADLINE_PATTERN, "TRANSFER"));
+
+        final TransferTaskFactory transferTaskFactory = new TransferTaskFactory(accountNums);
         for (int i = 0; i < totalTransfers; i++) {
-            threadPool.execute(taskFactory.createNew());
+            threadPool.execute(transferTaskFactory.createNew());
         }
+
+        latchOnTransfer.await();
+        System.out.println();
+//        System.out.println(format(FINISH_OUTPUT_PATTERN, "TRANSFER"));
     }
 
-    private void requestGet(List<String> accountNums) {
+    private void requestGet(List<String> accountNums) throws InterruptedException {
+        System.out.println(format(HEADLINE_PATTERN, "GET"));
+
         for (String accountNum : accountNums) {
             threadPool.execute(new GetTask(accountNum));
         }
+
+        latchOnGet.await();
+        System.out.println();
+//        System.out.println(format(FINISH_OUTPUT_PATTERN, "GET"));
     }
 
-    private void requestDelete(List<String> accountNums) {
+    private void requestDelete(List<String> accountNums) throws InterruptedException {
+        System.out.println(format(HEADLINE_PATTERN, "DELETE"));
+
         for (String accountNum : accountNums) {
             threadPool.execute(new DeleteTask(accountNum));
         }
+
+        latchOnDelete.await();
+        System.out.println();
+//        System.out.println(format(FINISH_OUTPUT_PATTERN, "DELETE"));
     }
 
     private static List<String> generateTestAccounts(int totalAccounts) {
         return IntStream
-                .iterate(1, num -> num + 1)
-                .limit(totalAccounts)
+                .rangeClosed(1, totalAccounts)
                 .mapToObj(ACCOUNT_NUMBER_FORMATTER::format)
                 .collect(Collectors.toList());
     }
@@ -160,6 +185,8 @@ public class Simulator implements AutoCloseable {
                 AccountWrapper account = rest.createAccount(number, initialAmount);
                 System.out.println("Created: " + account);
                 totalInitialAmount.addAndGet((long) account.getAmount());
+            } catch (Exception e) {
+                System.out.println("Not created: " + e);
             } finally {
                 latchOnCreate.countDown();
             }
@@ -180,18 +207,13 @@ public class Simulator implements AutoCloseable {
         @Override
         public void run() {
             try {
-                rest.transferMoney(fromAccountNum, toAccountNum, amount);
-                System.out.println("Transferred: " + toString());
+                TransactionWrapper transaction = rest.transferMoney(fromAccountNum, toAccountNum, amount);
+                System.out.println("Transferred: " + transaction);
             } catch (Exception e) {
                 System.out.println("Not transferred: " + e);
             } finally {
                 latchOnTransfer.countDown();
             }
-        }
-
-        @Override
-        public String toString() {
-            return "from " + fromAccountNum + " to " + toAccountNum + " on " + amount;
         }
     }
 
@@ -208,6 +230,8 @@ public class Simulator implements AutoCloseable {
                 AccountWrapper account = rest.getAccount(number);
                 System.out.println("Got: " + account);
                 totalFiniteAmount.addAndGet((long) account.getAmount());
+            } catch (Exception e) {
+                System.out.println("Not got: " + e);
             } finally {
                 latchOnGet.countDown();
             }
@@ -226,6 +250,8 @@ public class Simulator implements AutoCloseable {
             try {
                 AccountWrapper account = rest.deleteAccount(number);
                 System.out.println("Deleted: " + account);
+            } catch (Exception e) {
+                System.out.println("Not deleted: " + e);
             } finally {
                 latchOnDelete.countDown();
             }

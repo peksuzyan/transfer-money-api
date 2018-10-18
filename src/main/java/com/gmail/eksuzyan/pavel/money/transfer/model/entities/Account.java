@@ -1,5 +1,9 @@
 package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
 
+/**
+ * @author Pavel Eksuzian.
+ *         Created: 10/17/2018.
+ */
 public class Account {
 
     private final String number;
