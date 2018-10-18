@@ -67,8 +67,9 @@ public class AccountService {
             fromAccount = datastore.getAccount(fromAccountNum);
             toAccount = datastore.getAccount(toAccountNum);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not transfer money from '" + fromAccountNum + "' to '" +
-                    toAccountNum + "'. Reason: " + e.getMessage(), e);
+            throw new BusinessException(
+                    "Could not transfer money from '" + fromAccountNum + "' to '" +
+                            toAccountNum + "'. Reason: " + e.getMessage(), e);
         }
 
         final int fromAccountHash = identityHashCode(fromAccount);
@@ -99,8 +100,9 @@ public class AccountService {
 
     private static void transferMoneyWithoutBlock(Account fromAccount, Account toAccount, double amount) {
         if (fromAccount.getAmount() < amount)
-            throw new BusinessException("Could not transfer from '" + fromAccount.getNumber() + "' to '" +
-                    toAccount.getNumber() + "'. Reason: Not enough money. ");
+            throw new BusinessException(
+                    "Could not transfer from '" + fromAccount.getNumber() + "' to '" +
+                            toAccount.getNumber() + "'. Reason: Not enough money. ");
 
         toAccount.withdraw(amount);
         fromAccount.deposit(amount);
