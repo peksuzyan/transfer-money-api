@@ -6,6 +6,8 @@ import static java.lang.System.lineSeparator;
 import static java.util.Objects.nonNull;
 
 /**
+ * Main entry for simulating access and manipulation with RESTful API for user account processing.
+ *
  * @author Pavel Eksuzian.
  *         Created: 10/19/2018.
  */

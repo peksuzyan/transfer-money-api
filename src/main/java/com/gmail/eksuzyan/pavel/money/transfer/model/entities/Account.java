@@ -2,32 +2,66 @@ package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 
-import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static java.lang.System.identityHashCode;
 
 /**
+ * Describes user account.
+ * <p>
+ * Unconditionally thread-safe.
+ *
  * @author Pavel Eksuzian.
  *         Created: 10/17/2018.
  */
 public class Account {
 
+    /**
+     * Tie lock is used every time when the locking order cannot be determined based
+     * on {@link System#identityHashCode(Object)}.
+     */
     private static final ReentrantReadWriteLock TIE_LOCK = new ReentrantReadWriteLock();
+
+    /**
+     * Internal user account lock.
+     */
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
+    /**
+     * User account number.
+     */
     private final String number;
+
+    /**
+     * User account current amount.
+     */
     private double amount;
 
+    /**
+     * Single constructor.
+     *
+     * @param number        user account number
+     * @param initialAmount user account initial amount
+     */
     public Account(String number, double initialAmount) {
         this.number = number;
         this.amount = initialAmount;
     }
 
+    /**
+     * Gets user account number.
+     *
+     * @return user account number
+     */
     public String getNumber() {
         return number;
     }
 
+    /**
+     * Gets user account amount.
+     *
+     * @return user account amount
+     */
     public double getAmount() {
         lock.readLock().lock();
         try {
@@ -37,7 +71,14 @@ public class Account {
         }
     }
 
-    public void transferTo(Account other, double amount) {
+    /**
+     * Withdraws <code>amount</code> from this user account and deposits in <code>other</code> one.
+     *
+     * @param other  user account where money is being transferred to
+     * @param amount amount of money to transfer
+     * @throws BusinessException if this user account doesn't have enough amount to transfer
+     */
+    public void transferTo(Account other, double amount) throws BusinessException {
         final int thisHash = identityHashCode(this);
         final int otherHash = identityHashCode(other);
 
@@ -81,18 +122,5 @@ public class Account {
 
         this.amount -= amount;
         other.amount += amount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Account)) return false;
-        Account account = (Account) o;
-        return Objects.equals(number, account.number);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(number);
     }
 }

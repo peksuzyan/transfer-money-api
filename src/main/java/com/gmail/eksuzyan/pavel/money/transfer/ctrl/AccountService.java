@@ -6,22 +6,44 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
 /**
+ * Provides ways to manipulate user accounts from the business point of view.
+ * <p>
+ * Unconditionally thread-safe.
+ *
  * @author Pavel Eksuzian.
  *         Created: 10/17/2018.
  */
 public class AccountService {
 
+    /**
+     * Underlying datastore.
+     */
     private final AccountDatastore datastore;
 
+    /**
+     * Default constructor to build up service with in-memory datastore.
+     */
     public AccountService() {
         this(new AccountDatastore());
     }
 
+    /**
+     * Main constructor to build up service with passed datastore.
+     *
+     * @param datastore datastore
+     */
     @SuppressWarnings("WeakerAccess")
     public AccountService(AccountDatastore datastore) {
         this.datastore = datastore;
     }
 
+    /**
+     * Creates user account.
+     *
+     * @param accountNum    user account number
+     * @param initialAmount user account initial amount
+     * @throws BusinessException if user account cannot be created
+     */
     public void createAccount(String accountNum, double initialAmount) {
         Account account = new Account(accountNum, initialAmount);
 
@@ -31,9 +53,15 @@ public class AccountService {
             throw new BusinessException(
                     "Could not create an account '" + accountNum + "'. Reason: " + e.getMessage(), e);
         }
-
     }
 
+    /**
+     * Get user account by its number.
+     *
+     * @param accountNum user account number
+     * @return user account
+     * @throws BusinessException if user account cannot be got
+     */
     public Account getAccount(String accountNum) {
         try {
             return datastore.getAccount(accountNum);
@@ -43,6 +71,13 @@ public class AccountService {
         }
     }
 
+    /**
+     * Deletes user account.
+     *
+     * @param accountNum user account number
+     * @return user account
+     * @throws BusinessException if user account cannot be deleted
+     */
     public Account deleteAccount(String accountNum) {
         try {
             Account account = datastore.getAccount(accountNum);
@@ -56,6 +91,14 @@ public class AccountService {
         }
     }
 
+    /**
+     * Transfers amount of money between user accounts.
+     *
+     * @param fromAccountNum user account number where amount is withdrawn from
+     * @param toAccountNum   user account number where amount is deposited in
+     * @param amount         amount of money to transfer
+     * @throws BusinessException if transfer cannot be performed
+     */
     public void transferMoney(String fromAccountNum, String toAccountNum, double amount) {
         Account fromAccount, toAccount;
         try {
