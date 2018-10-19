@@ -31,9 +31,9 @@ public class AccountEndpoint {
         if (initialAmount < 0)
             throw new IllegalArgumentException("Initial amount cannot be negative. ");
 
-        Account account = service.createAccount(accountNum, initialAmount);
+        service.createAccount(accountNum, initialAmount);
 
-        return new AccountWrapper(account.getNumber(), account.getAmount());
+        return new AccountWrapper(accountNum, initialAmount);
     }
 
     public AccountWrapper getAccount(String accountNum) {

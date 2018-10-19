@@ -18,7 +18,7 @@ jar.doFirst {
                 "Build-Gradle-Version": gradle.gradleVersion,
                 "Build-Jdk-Version": JavaVersion.current(),
                 "Build-Created": new Date().format('yyyy-MM-dd HH:mm'),
-                "Main-Class": 'com.gmail.eksuzyan.pavel.money.transfer.Simulator',
+                "Main-Class": 'com.gmail.eksuzyan.pavel.money.transfer.App',
                 "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
         )
     }

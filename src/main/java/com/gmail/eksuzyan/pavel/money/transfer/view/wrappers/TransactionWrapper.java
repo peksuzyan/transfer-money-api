@@ -4,6 +4,7 @@ package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
  * @author Pavel Eksuzian.
  *         Created: 10/18/2018.
  */
+@SuppressWarnings("unused")
 public class TransactionWrapper {
 
     private String fromAccountNum;

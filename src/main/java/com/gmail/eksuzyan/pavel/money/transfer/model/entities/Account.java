@@ -2,6 +2,7 @@ package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static java.lang.System.identityHashCode;
@@ -12,7 +13,7 @@ import static java.lang.System.identityHashCode;
  */
 public class Account {
 
-    private static final ReentrantReadWriteLock tieLock = new ReentrantReadWriteLock();
+    private static final ReentrantReadWriteLock TIE_LOCK = new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     private final String number;
@@ -59,7 +60,7 @@ public class Account {
                 other.lock.writeLock().unlock();
             }
         } else {
-            tieLock.writeLock().lock();
+            TIE_LOCK.writeLock().lock();
             this.lock.writeLock().lock();
             other.lock.writeLock().lock();
             try {
@@ -67,7 +68,7 @@ public class Account {
             } finally {
                 other.lock.writeLock().unlock();
                 this.lock.writeLock().unlock();
-                tieLock.writeLock().unlock();
+                TIE_LOCK.writeLock().unlock();
             }
         }
     }
@@ -80,5 +81,18 @@ public class Account {
 
         this.amount -= amount;
         other.amount += amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+        Account account = (Account) o;
+        return Objects.equals(number, account.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
     }
 }

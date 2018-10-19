@@ -5,8 +5,6 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
-import static java.lang.System.identityHashCode;
-
 /**
  * @author Pavel Eksuzian.
  *         Created: 10/17/2018.
@@ -24,7 +22,7 @@ public class AccountService {
         this.datastore = datastore;
     }
 
-    public Account createAccount(String accountNum, double initialAmount) {
+    public void createAccount(String accountNum, double initialAmount) {
         Account account = new Account(accountNum, initialAmount);
 
         try {
@@ -34,7 +32,6 @@ public class AccountService {
                     "Could not create an account '" + accountNum + "'. Reason: " + e.getMessage(), e);
         }
 
-        return account;
     }
 
     public Account getAccount(String accountNum) {
