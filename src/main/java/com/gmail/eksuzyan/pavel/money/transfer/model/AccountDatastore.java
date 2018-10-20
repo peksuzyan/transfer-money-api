@@ -6,20 +6,39 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreExcepti
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Stores and provides ways to manipulate user accounts.
  * <p>
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ * Created: 10/17/2018.
  */
 public class AccountDatastore {
 
     /**
-     * Provides common place to store and get user accounts associating ones with their numbers.
+     * Underlying storage.
      */
-    private final ConcurrentMap<String, Account> userAccounts = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Account> userAccounts;
+
+    /**
+     * Default constructor to build up datastore with {@link ConcurrentHashMap#ConcurrentHashMap()} as storage.
+     */
+    public AccountDatastore() {
+        this(new ConcurrentHashMap<>());
+    }
+
+    /**
+     * Main constructor to build up datastore with passed storage.
+     *
+     * @param userAccounts user accounts storage
+     * @throws NullPointerException if storage is null
+     */
+    public AccountDatastore(ConcurrentMap<String, Account> userAccounts) {
+        this.userAccounts = requireNonNull(userAccounts);
+    }
 
     /**
      * Creates user account.

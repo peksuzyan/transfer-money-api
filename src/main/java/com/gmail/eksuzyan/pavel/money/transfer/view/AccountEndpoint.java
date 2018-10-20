@@ -8,13 +8,15 @@ import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Publishes API to access and manipulate user accounts.
  * <p>
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ * Created: 10/17/2018.
  */
 public class AccountEndpoint {
 
@@ -34,10 +36,11 @@ public class AccountEndpoint {
      * Main constructor to build up endpoint with passed service.
      *
      * @param service service
+     * @throws NullPointerException if service is null
      */
     @SuppressWarnings("WeakerAccess")
     public AccountEndpoint(AccountService service) {
-        this.service = service;
+        this.service = requireNonNull(service);
     }
 
     /**

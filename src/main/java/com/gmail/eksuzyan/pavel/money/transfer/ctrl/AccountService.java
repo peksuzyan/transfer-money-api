@@ -5,13 +5,15 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Provides ways to manipulate user accounts from the business point of view.
  * <p>
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ * Created: 10/17/2018.
  */
 public class AccountService {
 
@@ -31,10 +33,10 @@ public class AccountService {
      * Main constructor to build up service with passed datastore.
      *
      * @param datastore datastore
+     * @throws NullPointerException if datastore is null
      */
-    @SuppressWarnings("WeakerAccess")
-    public AccountService(AccountDatastore datastore) {
-        this.datastore = datastore;
+    AccountService(AccountDatastore datastore) {
+        this.datastore = requireNonNull(datastore);
     }
 
     /**

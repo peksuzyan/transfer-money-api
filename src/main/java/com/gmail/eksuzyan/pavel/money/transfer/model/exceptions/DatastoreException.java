@@ -4,7 +4,7 @@ package com.gmail.eksuzyan.pavel.money.transfer.model.exceptions;
  * Datastore exception is responsible for errors while working with datastore.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ * Created: 10/17/2018.
  */
 public class DatastoreException extends Exception {
 

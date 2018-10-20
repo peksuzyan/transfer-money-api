@@ -2,9 +2,11 @@ package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
 
 /**
  * User account wrapper in order to be represented in public API.
+ * <p>
+ * Not thread-safe.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ * Created: 10/17/2018.
  */
 @SuppressWarnings("unused")
 public class AccountWrapper {

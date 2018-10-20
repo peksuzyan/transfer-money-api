@@ -6,10 +6,10 @@ import static java.lang.System.lineSeparator;
 import static java.util.Objects.nonNull;
 
 /**
- * Main entry for simulating access and manipulation with RESTful API for user account processing.
+ * Main entry point for simulating access and manipulation with RESTful API for user account processing.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/19/2018.
+ * Created: 10/19/2018.
  */
 public class App {
 
@@ -24,7 +24,7 @@ public class App {
 
     private static void run(String[] args) throws InterruptedException {
         if (args.length < 2)
-            throw new IllegalArgumentException("Too less arguments. ");
+            throw new IllegalArgumentException("Too few arguments. ");
 
         int totalAccounts;
         try {

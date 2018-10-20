@@ -6,6 +6,15 @@ version = getProperty('app.version')
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
 jar.doFirst {
     manifest {
         attributes(
