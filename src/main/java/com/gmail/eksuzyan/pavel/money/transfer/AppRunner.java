@@ -39,7 +39,7 @@ class AppRunner implements AutoCloseable {
     private final AtomicLong totalFiniteAmount = new AtomicLong();
 
     private final AccountEndpoint rest = new AccountEndpoint();
-    private final ExecutorService threadPool = Executors.newCachedThreadPool();
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(16);
 
     private final int accountsCount;
     private final int transfersCount;
@@ -58,6 +58,7 @@ class AppRunner implements AutoCloseable {
      *
      * @param accountsCount  accounts count
      * @param transfersCount transfers count
+     * @throws IllegalArgumentException if accounts count < 2 or transfers count < 1
      */
     AppRunner(int accountsCount, int transfersCount) {
         this(accountsCount, transfersCount, null);
@@ -70,12 +71,18 @@ class AppRunner implements AutoCloseable {
      * @param accountsCount       accounts count
      * @param transfersCount      transfers count
      * @param randomizerInitState initial state of pseudo-random generator
+     * @throws IllegalArgumentException if accounts count < 2 or transfers count < 1
      */
     AppRunner(int accountsCount, int transfersCount, long randomizerInitState) {
         this(accountsCount, transfersCount, new Random(randomizerInitState));
     }
 
     private AppRunner(int accountsCount, int transfersCount, Random randomizer) {
+        if (accountsCount < 2)
+            throw new IllegalArgumentException("Accounts count is less than two. ");
+        if (transfersCount < 1)
+            throw new IllegalArgumentException("Transfers count is less than one. ");
+
         this.accountsCount = accountsCount;
         this.transfersCount = transfersCount;
 
@@ -124,11 +131,6 @@ class AppRunner implements AutoCloseable {
 
     private void requestTransfer(List<String> accountNums) throws InterruptedException {
         System.out.println(format(HEADLINE_PATTERN, "TRANSFER"));
-
-        if (accountNums.size() < 2) {
-            System.out.println();
-            return;
-        }
 
         final TransferTaskFactory transferTaskFactory = new TransferTaskFactory(accountNums);
         for (int i = 0; i < transfersCount; i++) {

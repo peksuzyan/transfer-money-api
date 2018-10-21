@@ -6,7 +6,7 @@ import static java.lang.System.lineSeparator;
 import static java.util.Objects.nonNull;
 
 /**
- * Main entry point for simulating access and manipulation with RESTful API for user account processing.
+ * Entry point for simulating access and manipulation with RESTful API for user account processing.
  *
  * @author Pavel Eksuzian.
  * Created: 10/19/2018.
@@ -26,23 +26,19 @@ public class App {
         if (args.length < 2)
             throw new IllegalArgumentException("Too few arguments. ");
 
-        int totalAccounts;
+        int accountsCount;
         try {
-            totalAccounts = parseInt(args[0]);
+            accountsCount = parseInt(args[0]);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Accounts count has wrong format: " + args[0], e);
         }
-        if (totalAccounts < 0)
-            throw new IllegalArgumentException("Accounts count is negative. ");
 
-        int totalTransfers;
+        int transfersCount;
         try {
-            totalTransfers = parseInt(args[1]);
+            transfersCount = parseInt(args[1]);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Transfers count has wrong format: " + args[1], e);
         }
-        if (totalTransfers < 0)
-            throw new IllegalArgumentException("Transfers count is negative. ");
 
         Long randomizerInitState = null;
         if (args.length > 2) {
@@ -54,7 +50,7 @@ public class App {
             }
         }
 
-        try (AppRunner runner = createNewAppRunner(totalAccounts, totalTransfers, randomizerInitState)) {
+        try (AppRunner runner = createNewAppRunner(accountsCount, transfersCount, randomizerInitState)) {
             runner.start();
         }
     }
@@ -68,8 +64,8 @@ public class App {
     private static String getHelpInfo() {
         return lineSeparator() +
                 "The following args have to be or might be specified: " + lineSeparator() + lineSeparator() +
-                "[totalAccounts] - total accounts count (int, zero or positive, mandatory) " + lineSeparator() +
-                "[totalTransfers] - total transfers count (int, zero or positive, mandatory) " + lineSeparator() +
+                "[totalAccounts] - total accounts count (int, >1, mandatory) " + lineSeparator() +
+                "[totalTransfers] - total transfers count (int, >0, mandatory) " + lineSeparator() +
                 "[randomizerInitState] - initial state of pseudo-random generator (long, optional) " + lineSeparator();
     }
 }
