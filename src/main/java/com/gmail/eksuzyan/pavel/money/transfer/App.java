@@ -55,10 +55,10 @@ public class App {
         }
     }
 
-    private static AppRunner createNewAppRunner(int totalAccounts, int totalTransfers, Long randomizerInitState) {
+    private static AppRunner createNewAppRunner(int accountsCount, int transfersCount, Long randomizerInitState) {
         return nonNull(randomizerInitState)
-                ? new AppRunner(totalAccounts, totalTransfers, randomizerInitState)
-                : new AppRunner(totalAccounts, totalTransfers);
+                ? new AppRunner(accountsCount, transfersCount, randomizerInitState)
+                : new AppRunner(accountsCount, transfersCount);
     }
 
     private static String getHelpInfo() {
