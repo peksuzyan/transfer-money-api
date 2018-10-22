@@ -2,6 +2,8 @@ package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static java.lang.System.identityHashCode;
@@ -20,7 +22,7 @@ public class Account {
      * Tie lock is used every time when the locking order cannot be determined based
      * on {@link System#identityHashCode(Object)}.
      */
-    private static final ReentrantReadWriteLock TIE_LOCK = new ReentrantReadWriteLock();
+    private static final Lock TIE_LOCK = new ReentrantLock();
 
     /**
      * Internal user account lock.
@@ -78,38 +80,51 @@ public class Account {
      * @param amount amount of money to transfer
      * @throws BusinessException if this user account doesn't have enough amount to transfer
      */
+    @SuppressWarnings("Duplicates")
     public void transferTo(Account other, double amount) throws BusinessException {
         final int thisHash = identityHashCode(this);
         final int otherHash = identityHashCode(other);
 
         if (thisHash < otherHash) {
             this.lock.writeLock().lock();
-            other.lock.writeLock().lock();
             try {
-                depositIn(other, amount);
+                other.lock.writeLock().lock();
+                try {
+                    depositIn(other, amount);
+                } finally {
+                    other.lock.writeLock().unlock();
+                }
             } finally {
-                other.lock.writeLock().unlock();
                 this.lock.writeLock().unlock();
             }
         } else if (thisHash > otherHash) {
             other.lock.writeLock().lock();
-            this.lock.writeLock().lock();
             try {
-                depositIn(other, amount);
+                this.lock.writeLock().lock();
+                try {
+                    depositIn(other, amount);
+                } finally {
+                    this.lock.writeLock().unlock();
+                }
             } finally {
-                this.lock.writeLock().unlock();
                 other.lock.writeLock().unlock();
             }
         } else {
-            TIE_LOCK.writeLock().lock();
-            this.lock.writeLock().lock();
-            other.lock.writeLock().lock();
+            TIE_LOCK.lock();
             try {
-                depositIn(other, amount);
+                this.lock.writeLock().lock();
+                try {
+                    other.lock.writeLock().lock();
+                    try {
+                        depositIn(other, amount);
+                    } finally {
+                        other.lock.writeLock().unlock();
+                    }
+                } finally {
+                    this.lock.writeLock().unlock();
+                }
             } finally {
-                other.lock.writeLock().unlock();
-                this.lock.writeLock().unlock();
-                TIE_LOCK.writeLock().unlock();
+                TIE_LOCK.unlock();
             }
         }
     }
