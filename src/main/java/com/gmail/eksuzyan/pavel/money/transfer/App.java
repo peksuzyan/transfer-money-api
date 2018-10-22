@@ -64,8 +64,8 @@ public class App {
     private static String getHelpInfo() {
         return lineSeparator() +
                 "The following args have to be or might be specified: " + lineSeparator() + lineSeparator() +
-                "[totalAccounts] - total accounts count (int, >1, mandatory) " + lineSeparator() +
-                "[totalTransfers] - total transfers count (int, >0, mandatory) " + lineSeparator() +
+                "[accountsCount] - total accounts count (int, >1, mandatory) " + lineSeparator() +
+                "[transfersCount] - total transfers count (int, >0, mandatory) " + lineSeparator() +
                 "[randomizerInitState] - initial state of pseudo-random generator (long, optional) " + lineSeparator();
     }
 }
