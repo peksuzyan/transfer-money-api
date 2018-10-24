@@ -2,10 +2,6 @@ package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import static java.lang.System.identityHashCode;
 
 /**
@@ -14,20 +10,15 @@ import static java.lang.System.identityHashCode;
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- * Created: 10/17/2018.
+ *         Created: 10/17/2018.
  */
 public class Account {
 
     /**
-     * Tie lock is used every time when the locking order cannot be determined based
+     * Locking on this object is used every time when the locking order cannot be determined based
      * on {@link System#identityHashCode(Object)}.
      */
-    private static final Lock TIE_LOCK = new ReentrantLock();
-
-    /**
-     * Internal user account lock.
-     */
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private static final Object GLOBAL_LOCK = new Object();
 
     /**
      * User account number.
@@ -64,13 +55,8 @@ public class Account {
      *
      * @return user account amount
      */
-    public double getAmount() {
-        lock.readLock().lock();
-        try {
-            return amount;
-        } finally {
-            lock.readLock().unlock();
-        }
+    public synchronized double getAmount() {
+        return amount;
     }
 
     /**
@@ -80,62 +66,40 @@ public class Account {
      * @param amount amount of money to transfer
      * @throws BusinessException if this user account doesn't have enough amount to transfer
      */
-    @SuppressWarnings("Duplicates")
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public void transferTo(Account other, double amount) throws BusinessException {
         final int thisHash = identityHashCode(this);
         final int otherHash = identityHashCode(other);
 
         if (thisHash < otherHash) {
-            this.lock.writeLock().lock();
-            try {
-                other.lock.writeLock().lock();
-                try {
-                    depositIn(other, amount);
-                } finally {
-                    other.lock.writeLock().unlock();
+            synchronized (this) {
+                synchronized (other) {
+                    transfer(this, other, amount);
                 }
-            } finally {
-                this.lock.writeLock().unlock();
             }
         } else if (thisHash > otherHash) {
-            other.lock.writeLock().lock();
-            try {
-                this.lock.writeLock().lock();
-                try {
-                    depositIn(other, amount);
-                } finally {
-                    this.lock.writeLock().unlock();
+            synchronized (other) {
+                synchronized (this) {
+                    transfer(this, other, amount);
                 }
-            } finally {
-                other.lock.writeLock().unlock();
             }
         } else {
-            TIE_LOCK.lock();
-            try {
-                this.lock.writeLock().lock();
-                try {
-                    other.lock.writeLock().lock();
-                    try {
-                        depositIn(other, amount);
-                    } finally {
-                        other.lock.writeLock().unlock();
+            synchronized (GLOBAL_LOCK) {
+                synchronized (this) {
+                    synchronized (other) {
+                        transfer(this, other, amount);
                     }
-                } finally {
-                    this.lock.writeLock().unlock();
                 }
-            } finally {
-                TIE_LOCK.unlock();
             }
         }
     }
 
-    private void depositIn(Account other, double amount) {
-        if (this.amount < amount)
+    private static void transfer(Account from, Account to, double amount) {
+        if (from.amount < amount)
             throw new BusinessException(
-                    "Could not transfer from '" + this.number + "' to '" +
-                            other.number + "'. Reason: Not enough money. ");
+                    "Could not transfer from '" + from.number + "' to '" + to.number + "'. Reason: Not enough money. ");
 
-        this.amount -= amount;
-        other.amount += amount;
+        from.amount -= amount;
+        to.amount += amount;
     }
 }
