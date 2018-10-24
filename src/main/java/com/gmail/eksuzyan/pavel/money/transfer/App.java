@@ -1,5 +1,17 @@
 package com.gmail.eksuzyan.pavel.money.transfer;
 
+import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
+import com.sun.net.httpserver.HttpServer;
+import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
+
+import javax.ws.rs.core.UriBuilder;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.util.Objects;
+
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 import static java.lang.System.lineSeparator;
@@ -14,13 +26,31 @@ import static java.util.Objects.nonNull;
 public class App {
 
     public static void main(String[] args) {
-        try {
-            run(args);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(getHelpInfo());
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
+        ResourceConfig config = new ResourceConfig(AccountEndpoint.class);
+        HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            String cmd = null;
+            while (!Objects.equals(cmd = reader.readLine(), "stop")) {
+                Thread.sleep(1_000);
+            }
+        } catch (IOException | InterruptedException e) {
+            server.stop(1);
+            throw new IllegalStateException("Something went wrong. ", e);
         }
+
+        server.stop(0);
     }
+
+//    public static void main(String[] args) {
+//        try {
+//            run(args);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println(getHelpInfo());
+//        }
+//    }
 
     private static void run(String[] args) throws InterruptedException {
         if (args.length < 2)

@@ -6,6 +6,10 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
@@ -18,6 +22,7 @@ import static java.util.Objects.requireNonNull;
  * @author Pavel Eksuzian.
  * Created: 10/17/2018.
  */
+@Path("/entry-point")
 public class AccountEndpoint {
 
     /**
@@ -30,6 +35,13 @@ public class AccountEndpoint {
      */
     public AccountEndpoint() {
         this(new AccountService());
+    }
+
+    @GET
+    @Path("test")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String test() {
+        return "Test";
     }
 
     /**
