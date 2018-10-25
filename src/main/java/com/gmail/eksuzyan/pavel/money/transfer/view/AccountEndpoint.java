@@ -18,16 +18,14 @@ import static java.util.Objects.requireNonNull;
 @Path("/accounts")
 public class AccountEndpoint {
 
-    /**
-     * Underlying service.
-     */
     private final AccountService service;
 
-    /**
-     * Default constructor to build up endpoint with default service.
-     */
     public AccountEndpoint() {
         this(new AccountService());
+    }
+
+    public AccountEndpoint(AccountService service) {
+        this.service = requireNonNull(service);
     }
 
     @GET
@@ -35,10 +33,6 @@ public class AccountEndpoint {
     @Produces(MediaType.TEXT_PLAIN)
     public String test() {
         return "Test";
-    }
-
-    public AccountEndpoint(AccountService service) {
-        this.service = requireNonNull(service);
     }
 
     @POST
@@ -70,7 +64,6 @@ public class AccountEndpoint {
 
     @DELETE
     @Path("/{accountNum}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public AccountWrapper deleteAccount(@PathParam("accountNum") String accountNum) {
         if (accountNum == null || accountNum.trim().isEmpty())

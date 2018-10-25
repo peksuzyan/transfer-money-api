@@ -1,8 +1,8 @@
 package com.gmail.eksuzyan.pavel.money.transfer;
 
 import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
-import com.sun.net.httpserver.HttpServer;
-import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
+import org.eclipse.jetty.server.Server;
+import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.ws.rs.core.UriBuilder;
@@ -21,25 +21,32 @@ import static java.util.Objects.nonNull;
  * Entry point for simulating access and manipulation with RESTful API for user account processing.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/19/2018.
+ * Created: 10/19/2018.
  */
 public class App {
 
     public static void main(String[] args) {
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
         ResourceConfig config = new ResourceConfig(AccountEndpoint.class);
-        HttpServer server = JdkHttpServerFactory.createHttpServer(baseUri, config);
+        Server server = JettyHttpContainerFactory.createServer(baseUri, config);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             while (!Objects.equals(reader.readLine(), "stop")) {
                 Thread.sleep(1_000);
             }
+            doStop(server);
         } catch (IOException | InterruptedException e) {
-            server.stop(1);
+            doStop(server);
             throw new IllegalStateException("Something went wrong. ", e);
         }
+    }
 
-        server.stop(0);
+    private static void doStop(Server server) {
+        try {
+            server.stop();
+        } catch (Exception e) {
+            throw new IllegalStateException("Server could not stop properly. ", e);
+        }
     }
 
 //    public static void main(String[] args) {
