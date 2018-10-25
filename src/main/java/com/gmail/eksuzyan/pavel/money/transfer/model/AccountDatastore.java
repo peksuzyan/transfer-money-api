@@ -38,6 +38,7 @@ public class AccountDatastore {
      */
     public AccountDatastore(ConcurrentMap<String, Account> userAccounts) {
         this.userAccounts = requireNonNull(userAccounts);
+        this.userAccounts.put("ACC-111", new Account("ACC-111", 15d));
     }
 
     /**

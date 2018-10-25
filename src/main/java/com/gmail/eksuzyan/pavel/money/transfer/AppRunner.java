@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.money.transfer;
 
-import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.OldAccountEndpoint;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
@@ -38,7 +38,7 @@ class AppRunner implements AutoCloseable {
     private final AtomicLong totalInitialAmount = new AtomicLong();
     private final AtomicLong totalFiniteAmount = new AtomicLong();
 
-    private final AccountEndpoint rest = new AccountEndpoint();
+    private final OldAccountEndpoint rest = new OldAccountEndpoint();
     private final ExecutorService threadPool = Executors.newFixedThreadPool(16);
 
     private final int accountsCount;
@@ -228,7 +228,7 @@ class AppRunner implements AutoCloseable {
             try {
                 AccountWrapper account = rest.createAccount(number, initialAmount);
                 System.out.println("Created: " + account);
-                totalInitialAmount.addAndGet((long) account.getAmount());
+                totalInitialAmount.addAndGet(account.getAmount().longValue());
             } catch (Exception e) {
                 System.out.println("Not created: " + e);
             } finally {
@@ -273,7 +273,7 @@ class AppRunner implements AutoCloseable {
             try {
                 AccountWrapper account = rest.getAccount(number);
                 System.out.println("Got: " + account);
-                totalFiniteAmount.addAndGet((long) account.getAmount());
+                totalFiniteAmount.addAndGet(account.getAmount().longValue());
             } catch (Exception e) {
                 System.out.println("Not got: " + e);
             } finally {

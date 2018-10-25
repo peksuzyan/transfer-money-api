@@ -1,5 +1,8 @@
 package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Transaction wrapper in order to be represented in public API.
  * <p>
@@ -8,23 +11,26 @@ package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
  * @author Pavel Eksuzian.
  * Created: 10/18/2018.
  */
-@SuppressWarnings("unused")
+@XmlRootElement
 public class TransactionWrapper {
 
     /**
      * User account number where amount is withdrawn from.
      */
+    @XmlElement
     private String fromAccountNum;
 
     /**
      * User account number where amount is deposited in.
      */
+    @XmlElement
     private String toAccountNum;
 
     /**
      * Amount of money to transfer.
      */
-    private double amount;
+    @XmlElement
+    private Double amount;
 
     /**
      * Single constructor.
@@ -80,7 +86,7 @@ public class TransactionWrapper {
      *
      * @return amount
      */
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
@@ -89,7 +95,7 @@ public class TransactionWrapper {
      *
      * @param amount amount
      */
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

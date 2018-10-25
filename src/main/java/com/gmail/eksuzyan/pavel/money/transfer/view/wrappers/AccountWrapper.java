@@ -1,5 +1,8 @@
 package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * User account wrapper in order to be represented in public API.
  * <p>
@@ -8,7 +11,7 @@ package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
  * @author Pavel Eksuzian.
  * Created: 10/17/2018.
  */
-@SuppressWarnings("unused")
+@XmlRootElement
 public class AccountWrapper {
 
     /**
@@ -25,12 +28,14 @@ public class AccountWrapper {
     /**
      * User account number.
      */
+    @XmlElement
     private String number;
 
     /**
      * User account amount.
      */
-    private double amount;
+    @XmlElement
+    private Double amount;
 
     /**
      * Gets number.
@@ -55,7 +60,7 @@ public class AccountWrapper {
      *
      * @return amount
      */
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
@@ -64,7 +69,7 @@ public class AccountWrapper {
      *
      * @param amount amount
      */
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

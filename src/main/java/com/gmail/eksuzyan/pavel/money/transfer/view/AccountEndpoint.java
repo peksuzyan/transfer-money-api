@@ -1,28 +1,21 @@
 package com.gmail.eksuzyan.pavel.money.transfer.view;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * Publishes API to access and manipulate user accounts.
- * <p>
- * Unconditionally thread-safe.
- *
  * @author Pavel Eksuzian.
- * Created: 10/17/2018.
+ *         Created: 10/25/2018.
  */
-@Path("/entry-point")
+@Path("/accounts")
 public class AccountEndpoint {
 
     /**
@@ -44,47 +37,29 @@ public class AccountEndpoint {
         return "Test";
     }
 
-    /**
-     * Main constructor to build up endpoint with passed service.
-     *
-     * @param service service
-     * @throws NullPointerException if service is null
-     */
-    @SuppressWarnings("WeakerAccess")
     public AccountEndpoint(AccountService service) {
         this.service = requireNonNull(service);
     }
 
-    /**
-     * Creates user account.
-     *
-     * @param accountNum    user account number
-     * @param initialAmount user account initial amount
-     * @return user account representation
-     * @throws IllegalArgumentException if request validation fails
-     * @throws BusinessException        if business error happens
-     */
-    public AccountWrapper createAccount(String accountNum, double initialAmount) {
-        if (accountNum == null || accountNum.trim().isEmpty())
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public AccountWrapper createAccount(AccountWrapper account) {
+        if (account.getNumber() == null || account.getNumber().trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
-        if (initialAmount < 0)
+        if (account.getAmount() < 0)
             throw new IllegalArgumentException("Initial amount cannot be negative. ");
 
-        service.createAccount(accountNum, initialAmount);
+        service.createAccount(account.getNumber(), account.getAmount());
 
-        return new AccountWrapper(accountNum, initialAmount);
+        return new AccountWrapper(account.getNumber(), account.getAmount());
     }
 
-    /**
-     * Gets user account by its number.
-     *
-     * @param accountNum user account number
-     * @return user account representation
-     * @throws IllegalArgumentException if request validation fails
-     * @throws BusinessException        if business error happens
-     */
-    public AccountWrapper getAccount(String accountNum) {
+    @GET
+    @Path("/{accountNum}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AccountWrapper getAccount(@PathParam("accountNum") String accountNum) {
         if (accountNum == null || accountNum.trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
@@ -93,15 +68,11 @@ public class AccountEndpoint {
         return new AccountWrapper(account.getNumber(), account.getAmount());
     }
 
-    /**
-     * Deletes user account.
-     *
-     * @param accountNum user account number
-     * @return user account representation
-     * @throws IllegalArgumentException if request validation fails
-     * @throws BusinessException        if business error happens
-     */
-    public AccountWrapper deleteAccount(String accountNum) {
+    @DELETE
+    @Path("/{accountNum}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public AccountWrapper deleteAccount(@PathParam("accountNum") String accountNum) {
         if (accountNum == null || accountNum.trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
@@ -110,32 +81,24 @@ public class AccountEndpoint {
         return new AccountWrapper(account.getNumber(), account.getAmount());
     }
 
-    /**
-     * Transfers amount of money between user accounts.
-     *
-     * @param fromAccountNum user account number where amount is withdrawn from
-     * @param toAccountNum   user account number where amount is deposited in
-     * @param amount         amount of money to transfer
-     * @return transaction representation
-     * @throws IllegalArgumentException if request validation fails
-     * @throws BusinessException        if business error happens
-     */
-    public TransactionWrapper transferMoney(String fromAccountNum, String toAccountNum, double amount) {
-        if (fromAccountNum == null || fromAccountNum.trim().isEmpty())
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public TransactionWrapper transferMoney(TransactionWrapper tx) {
+        if (tx.getFromAccountNum() == null || tx.getFromAccountNum().trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
-        if (toAccountNum == null || toAccountNum.trim().isEmpty())
+        if (tx.getToAccountNum() == null || tx.getToAccountNum().trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
-        if (Objects.equals(fromAccountNum, toAccountNum))
+        if (Objects.equals(tx.getFromAccountNum(), tx.getToAccountNum()))
             throw new IllegalArgumentException("Account numbers are the same. ");
 
-        if (amount <= 0)
+        if (tx.getAmount() <= 0)
             throw new IllegalArgumentException("Transfer amount cannot be negative or zero. ");
 
-        service.transferMoney(fromAccountNum, toAccountNum, amount);
+        service.transferMoney(tx.getFromAccountNum(), tx.getToAccountNum(), tx.getAmount());
 
-        return new TransactionWrapper(fromAccountNum, toAccountNum, amount);
+        return new TransactionWrapper(tx.getFromAccountNum(), tx.getToAccountNum(), tx.getAmount());
     }
-
 }
