@@ -17,14 +17,14 @@ public class TransactionWrapper {
     /**
      * User account number where amount is withdrawn from.
      */
-    @XmlElement
-    private String fromAccountNum;
+    @XmlElement(name = "src")
+    private String srcNum;
 
     /**
      * User account number where amount is deposited in.
      */
-    @XmlElement
-    private String toAccountNum;
+    @XmlElement(name = "dest")
+    private String destNum;
 
     /**
      * Amount of money to transfer.
@@ -33,52 +33,58 @@ public class TransactionWrapper {
     private Double amount;
 
     /**
+     * Default constructor.
+     */
+    public TransactionWrapper() {
+    }
+
+    /**
      * Single constructor.
      *
-     * @param fromAccountNum user account number where amount is withdrawn from
-     * @param toAccountNum   user account number where amount is deposited in
-     * @param amount         amount of money to transfer
+     * @param srcNum  user account number where amount is withdrawn from
+     * @param destNum user account number where amount is deposited in
+     * @param amount  amount of money to transfer
      */
-    public TransactionWrapper(String fromAccountNum, String toAccountNum, double amount) {
-        this.fromAccountNum = fromAccountNum;
-        this.toAccountNum = toAccountNum;
+    public TransactionWrapper(String srcNum, String destNum, double amount) {
+        this.srcNum = srcNum;
+        this.destNum = destNum;
         this.amount = amount;
     }
 
     /**
-     * Gets fromAccountNum.
+     * Gets srcNum.
      *
-     * @return fromAccountNum
+     * @return srcNum
      */
-    public String getFromAccountNum() {
-        return fromAccountNum;
+    public String getSrcNum() {
+        return srcNum;
     }
 
     /**
-     * Sets fromAccountNum.
+     * Sets srcNum.
      *
-     * @param fromAccountNum fromAccountNum
+     * @param srcNum srcNum
      */
-    public void setFromAccountNum(String fromAccountNum) {
-        this.fromAccountNum = fromAccountNum;
+    public void setSrcNum(String srcNum) {
+        this.srcNum = srcNum;
     }
 
     /**
-     * Gets toAccountNum.
+     * Gets destNum.
      *
-     * @return toAccountNum
+     * @return destNum
      */
-    public String getToAccountNum() {
-        return toAccountNum;
+    public String getDestNum() {
+        return destNum;
     }
 
     /**
-     * Sets toAccountNum.
+     * Sets destNum.
      *
-     * @param toAccountNum toAccountNum
+     * @param destNum destNum
      */
-    public void setToAccountNum(String toAccountNum) {
-        this.toAccountNum = toAccountNum;
+    public void setDestNum(String destNum) {
+        this.destNum = destNum;
     }
 
     /**
@@ -102,8 +108,8 @@ public class TransactionWrapper {
     @Override
     public String toString() {
         return "TransactionWrapper{" +
-                "fromAccountNum='" + fromAccountNum + '\'' +
-                ", toAccountNum='" + toAccountNum + '\'' +
+                "srcNum='" + srcNum + '\'' +
+                ", destNum='" + destNum + '\'' +
                 ", amount=" + amount +
                 '}';
     }

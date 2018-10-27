@@ -3,6 +3,8 @@ package com.gmail.eksuzyan.pavel.money.transfer.model;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -38,7 +40,6 @@ public class AccountDatastore {
      */
     public AccountDatastore(ConcurrentMap<String, Account> userAccounts) {
         this.userAccounts = requireNonNull(userAccounts);
-        this.userAccounts.put("ACC-111", new Account("ACC-111", 15d));
     }
 
     /**
@@ -70,6 +71,15 @@ public class AccountDatastore {
             throw new DatastoreException("Account '" + accountNum + "' is not found. ");
 
         return account;
+    }
+
+    /**
+     * Gets all user accounts.
+     *
+     * @return user account list
+     */
+    public List<Account> getAllAccounts() {
+        return new ArrayList<>(userAccounts.values());
     }
 
     /**

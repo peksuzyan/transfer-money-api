@@ -10,7 +10,7 @@ import static java.lang.System.identityHashCode;
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ * Created: 10/17/2018.
  */
 public class Account {
 
@@ -28,7 +28,7 @@ public class Account {
     /**
      * User account current amount.
      */
-    private double amount;
+    private Double amount;
 
     /**
      * Single constructor.
@@ -36,7 +36,7 @@ public class Account {
      * @param number        user account number
      * @param initialAmount user account initial amount
      */
-    public Account(String number, double initialAmount) {
+    public Account(String number, Double initialAmount) {
         this.number = number;
         this.amount = initialAmount;
     }
@@ -55,8 +55,17 @@ public class Account {
      *
      * @return user account amount
      */
-    public synchronized double getAmount() {
+    public synchronized Double getAmount() {
         return amount;
+    }
+
+    /**
+     * Sets user account amount.
+     *
+     * @param amount user account amount
+     */
+    public synchronized void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     /**
@@ -67,7 +76,7 @@ public class Account {
      * @throws BusinessException if this user account doesn't have enough amount to transfer
      */
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-    public void transferTo(Account other, double amount) throws BusinessException {
+    public void transferTo(Account other, Double amount) throws BusinessException {
         final int thisHash = identityHashCode(this);
         final int otherHash = identityHashCode(other);
 
@@ -94,7 +103,7 @@ public class Account {
         }
     }
 
-    private static void transfer(Account from, Account to, double amount) {
+    private static void transfer(Account from, Account to, Double amount) {
         if (from.amount < amount)
             throw new BusinessException(
                     "Could not transfer from '" + from.number + "' to '" + to.number + "'. Reason: Not enough money. ");

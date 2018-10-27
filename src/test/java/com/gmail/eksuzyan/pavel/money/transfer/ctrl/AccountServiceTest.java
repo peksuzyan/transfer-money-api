@@ -6,9 +6,11 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 import org.junit.Test;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -23,7 +25,7 @@ public class AccountServiceTest {
         AccountService service = new AccountService(new AccountDatastore(storage));
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
 
         service.createAccount(num, initAmount);
 
@@ -46,7 +48,7 @@ public class AccountServiceTest {
         AccountService service = new AccountService(datastore);
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
 
         service.createAccount(num, initAmount);
     }
@@ -57,7 +59,7 @@ public class AccountServiceTest {
         AccountService service = new AccountService(new AccountDatastore(storage));
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
         storage.put(num, new Account(num, initAmount));
 
         Account actual = service.getAccount(num);
@@ -85,12 +87,36 @@ public class AccountServiceTest {
     }
 
     @Test
+    public void testGetAllAccountsPositive() {
+        ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
+        AccountService service = new AccountService(new AccountDatastore(storage));
+
+        String num = "a111aa";
+        Double initAmount = 1.0;
+        storage.put(num, new Account(num, initAmount));
+
+        Map<String, Account> actual = service.getAllAccounts();
+
+        assertEquals(1, actual.size());
+    }
+
+    @Test
+    public void testGetAllAccountsNegative() {
+        ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
+        AccountService service = new AccountService(new AccountDatastore(storage));
+
+        Map<String, Account> actual = service.getAllAccounts();
+
+        assertEquals(0, actual.size());
+    }
+
+    @Test
     public void testDeleteAccountPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountService service = new AccountService(new AccountDatastore(storage));
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
         storage.put(num, new Account(num, initAmount));
 
         Account actual = service.deleteAccount(num);
@@ -118,14 +144,48 @@ public class AccountServiceTest {
     }
 
     @Test
+    public void testUpdateAccountPositive() {
+        ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
+        AccountService service = new AccountService(new AccountDatastore(storage));
+
+        String num = "a111aa";
+        Double initAmount = 1.0;
+        storage.put(num, new Account(num, initAmount));
+
+        Double newAmount = 2.0;
+        Account actual = service.updateAccount(num, newAmount);
+
+        boolean result = Objects.equals(num, actual.getNumber())
+                && Objects.equals(newAmount, actual.getAmount());
+
+        assertTrue(result);
+    }
+
+    @Test(expected = BusinessException.class)
+    public void testUpdateAccountThrowsCouldNotUpdateAccount() {
+        ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
+        AccountDatastore datastore = new AccountDatastore(storage) {
+            @Override
+            public Account getAccount(String accountNum) throws DatastoreException {
+                throw new DatastoreException("Account is not found. ");
+            }
+        };
+        AccountService service = new AccountService(datastore);
+
+        String num = "a111aa";
+
+        service.updateAccount(num, 2.0);
+    }
+
+    @Test
     public void testTransferMoneyPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountService service = new AccountService(new AccountDatastore(storage));
 
         String num1 = "a111aa";
         String num2 = "b222bb";
-        double initAmount1 = 1.0;
-        double initAmount2 = 2.0;
+        Double initAmount1 = 1.0;
+        Double initAmount2 = 2.0;
         storage.put(num1, new Account(num1, initAmount1));
         storage.put(num2, new Account(num2, initAmount2));
 
@@ -153,8 +213,8 @@ public class AccountServiceTest {
 
         String num1 = "a111aa";
         String num2 = "b222bb";
-        double initAmount1 = 1.0;
-        double initAmount2 = 2.0;
+        Double initAmount1 = 1.0;
+        Double initAmount2 = 2.0;
         storage.put(num1, new Account(num1, initAmount1));
         storage.put(num2, new Account(num2, initAmount2));
 
@@ -168,8 +228,8 @@ public class AccountServiceTest {
 
         String num1 = "a111aa";
         String num2 = "b222bb";
-        double initAmount1 = 1.0;
-        double initAmount2 = 2.0;
+        Double initAmount1 = 1.0;
+        Double initAmount2 = 2.0;
         storage.put(num1, new Account(num1, initAmount1));
         storage.put(num2, new Account(num2, initAmount2));
 

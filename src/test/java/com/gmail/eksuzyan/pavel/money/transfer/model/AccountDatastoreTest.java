@@ -4,6 +4,7 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -21,7 +22,7 @@ public class AccountDatastoreTest {
         AccountDatastore datastore = new AccountDatastore(storage);
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
         Account expected = new Account(num, initAmount);
 
         datastore.createAccount(expected);
@@ -36,7 +37,7 @@ public class AccountDatastoreTest {
         AccountDatastore datastore = new AccountDatastore(storage);
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
         Account expected = new Account(num, initAmount);
 
         datastore.createAccount(expected);
@@ -49,7 +50,7 @@ public class AccountDatastoreTest {
         AccountDatastore datastore = new AccountDatastore(storage);
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
         Account expected = new Account(num, initAmount);
         storage.put(num, expected);
 
@@ -69,12 +70,37 @@ public class AccountDatastoreTest {
     }
 
     @Test
+    public void testGetAllAccountsPositive() {
+        ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
+        AccountDatastore datastore = new AccountDatastore(storage);
+
+        String num = "a111aa";
+        Double initAmount = 1.0;
+        Account expected = new Account(num, initAmount);
+        storage.put(num, expected);
+
+        List<Account> actual = datastore.getAllAccounts();
+
+        assertEquals(1, actual.size());
+    }
+
+    @Test
+    public void testGetAllAccountsNegative() {
+        ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
+        AccountDatastore datastore = new AccountDatastore(storage);
+
+        List<Account> actual = datastore.getAllAccounts();
+
+        assertEquals(0, actual.size());
+    }
+
+    @Test
     public void testDeleteAccountPositive() throws DatastoreException {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountDatastore datastore = new AccountDatastore(storage);
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
         Account expected = new Account(num, initAmount);
         storage.put(num, expected);
 
@@ -90,7 +116,7 @@ public class AccountDatastoreTest {
         AccountDatastore datastore = new AccountDatastore(storage);
 
         String num = "a111aa";
-        double initAmount = 1.0;
+        Double initAmount = 1.0;
         Account expected = new Account(num, initAmount);
 
         datastore.deleteAccount(expected);

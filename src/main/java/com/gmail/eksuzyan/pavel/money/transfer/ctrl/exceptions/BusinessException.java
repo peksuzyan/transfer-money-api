@@ -18,12 +18,12 @@ public class BusinessException extends RuntimeException {
     }
 
     /**
-     * Constructor with message and cause params.
+     * Constructor with no writable stacktrace, only message and cause are being written.
      *
      * @param message description
      * @param cause   reason or null if there's no
      */
     public BusinessException(String message, Throwable cause) {
-        super(message, cause);
+        super(message, cause, false, false);
     }
 }

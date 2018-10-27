@@ -15,17 +15,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AccountWrapper {
 
     /**
-     * Single constructor.
-     *
-     * @param number user account number
-     * @param amount user account amount
-     */
-    public AccountWrapper(String number, double amount) {
-        this.number = number;
-        this.amount = amount;
-    }
-
-    /**
      * User account number.
      */
     @XmlElement
@@ -36,6 +25,23 @@ public class AccountWrapper {
      */
     @XmlElement
     private Double amount;
+
+    /**
+     * Default constructor.
+     */
+    public AccountWrapper() {
+    }
+
+    /**
+     * Single constructor.
+     *
+     * @param number user account number
+     * @param amount user account amount
+     */
+    public AccountWrapper(String number, double amount) {
+        this.number = number;
+        this.amount = amount;
+    }
 
     /**
      * Gets number.
