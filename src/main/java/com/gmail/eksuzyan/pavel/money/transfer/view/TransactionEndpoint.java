@@ -16,18 +16,32 @@ import java.util.Collection;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
+ * Publishes API to access and manipulate user transactions.
+ * <p>
+ * Unconditionally thread-safe.
+ *
  * @author Pavel Eksuzian.
  *         Created: 28.10.2018.
  */
 @Path("/tx")
 public class TransactionEndpoint {
 
+    /**
+     * Underlying account service.
+     */
     private final AccountService accService;
 
+    /**
+     * Main constructor to build up transaction endpoint with passed accService.
+     *
+     * @param accService account service
+     * @throws NullPointerException if accService is null
+     */
     @Inject
     public TransactionEndpoint(AccountService accService) {
         this.accService = requireNonNull(accService);
@@ -36,7 +50,7 @@ public class TransactionEndpoint {
     /**
      * Transfers amount of money between user accounts.
      *
-     * @param tx describes where amount is withdrawn from and is deposited to
+     * @param tx transaction representation describes where amount is withdrawn from and is deposited to
      * @return representation of affected user accounts
      * @throws IllegalArgumentException if request validation fails
      * @throws BusinessException        if business error happens
@@ -54,16 +68,14 @@ public class TransactionEndpoint {
         if (Objects.equals(tx.getSrcNum(), tx.getDestNum()))
             throw new IllegalArgumentException("Account numbers are the same. ");
 
-        if (tx.getAmount() <= 0)
-            throw new IllegalArgumentException("Transfer amount cannot be negative or zero. ");
+        if (tx.getAmount() == null || tx.getAmount() <= 0)
+            throw new IllegalArgumentException("Transfer amount cannot be null, negative or zero. ");
 
         Collection<Account> accounts = accService.transferMoney(tx.getSrcNum(), tx.getDestNum(), tx.getAmount());
 
-        Collection<AccountWrapper> wrappers = accounts.stream()
+        return accounts.stream()
                 .map(acc -> new AccountWrapper(acc.getNumber(), acc.getAmount()))
-                .collect(toList());
-
-        return new AccountsWrapper(wrappers);
+                .collect(collectingAndThen(toList(), AccountsWrapper::new));
     }
 
 }

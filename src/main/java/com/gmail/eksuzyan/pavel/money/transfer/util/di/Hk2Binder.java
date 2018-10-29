@@ -14,11 +14,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * HK2 dependency injection framework binder.
+ *
  * @author Pavel Eksuzian.
  *         Created: 28.10.2018.
  */
 public class Hk2Binder extends AbstractBinder {
 
+    /**
+     * Declares and binds injectable resources (i.e. implementations) with their contracts.
+     */
     @Override
     protected void configure() {
         bindFactory(ConcurrentMapFactory.class).to(new TypeLiteral<ConcurrentMap<String, Account>>() {

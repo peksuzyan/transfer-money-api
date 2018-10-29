@@ -11,10 +11,15 @@ import javax.ws.rs.*;
 import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
+ * Publishes API to access and manipulate user accounts.
+ * <p>
+ * Unconditionally thread-safe.
+ *
  * @author Pavel Eksuzian.
  *         Created: 10/25/2018.
  */
@@ -26,10 +31,13 @@ public class AccountEndpoint {
      */
     private final AccountService accService;
 
+    /**
+     * Transaction endpoint.
+     */
     private final TransactionEndpoint txEndpoint;
 
     /**
-     * Main constructor to build up endpoint with passed accService.
+     * Main constructor to build up account endpoint with passed accService.
      *
      * @param accService account service
      * @param txEndpoint transaction endpoint
@@ -44,7 +52,7 @@ public class AccountEndpoint {
     /**
      * Creates user account.
      *
-     * @param account user account
+     * @param acc user account
      * @return user account representation
      * @throws IllegalArgumentException if request validation fails
      * @throws BusinessException        if business error happens
@@ -52,36 +60,36 @@ public class AccountEndpoint {
     @POST
     @Consumes({APPLICATION_JSON})
     @Produces({APPLICATION_JSON})
-    public AccountWrapper createAccount(AccountWrapper account) {
-        if (account.getNumber() == null || account.getNumber().trim().isEmpty())
+    public AccountWrapper createAccount(AccountWrapper acc) {
+        if (acc.getNumber() == null || acc.getNumber().trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
-        if (account.getAmount() < 0)
-            throw new IllegalArgumentException("Initial amount cannot be negative. ");
+        if (acc.getAmount() == null || acc.getAmount() < 0)
+            throw new IllegalArgumentException("Initial amount cannot be null or negative. ");
 
-        accService.createAccount(account.getNumber(), account.getAmount());
+        accService.createAccount(acc.getNumber(), acc.getAmount());
 
-        return account;
+        return acc;
     }
 
     /**
      * Gets user account by its number.
      *
-     * @param accountNum user account number
+     * @param accNum user account number
      * @return user account representation
      * @throws IllegalArgumentException if request validation fails
      * @throws BusinessException        if business error happens
      */
     @GET
-    @Path("/{accountNum}")
+    @Path("/{accNum}")
     @Produces({APPLICATION_JSON})
-    public AccountWrapper getAccount(@PathParam("accountNum") String accountNum) {
-        if (accountNum == null || accountNum.trim().isEmpty())
+    public AccountWrapper getAccount(@PathParam("accNum") String accNum) {
+        if (accNum == null || accNum.trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
-        Account account = accService.getAccount(accountNum);
+        Account acc = accService.getAccount(accNum);
 
-        return new AccountWrapper(account.getNumber(), account.getAmount());
+        return new AccountWrapper(acc.getNumber(), acc.getAmount());
     }
 
     /**
@@ -94,53 +102,56 @@ public class AccountEndpoint {
     public AccountsWrapper getAccounts() {
         Collection<Account> accounts = accService.getAllAccounts().values();
 
-        Collection<AccountWrapper> wrappers = accounts.stream()
+        return accounts.stream()
                 .map(acc -> new AccountWrapper(acc.getNumber(), acc.getAmount()))
-                .collect(toList());
-
-        return new AccountsWrapper(wrappers);
+                .collect(collectingAndThen(toList(), AccountsWrapper::new));
     }
 
     /**
      * Updates user account.
      *
-     * @param accountNum     user account number
-     * @param accountWrapper updatable values of user account
+     * @param accNum     user account number
+     * @param accWrapper updatable values of user account
      * @return user account representation
      */
     @PUT
-    @Path("/{accountNum}")
+    @Path("/{accNum}")
     @Produces({APPLICATION_JSON})
     @Consumes({APPLICATION_JSON})
-    public AccountWrapper updateAccount(@PathParam("accountNum") String accountNum, AccountWrapper accountWrapper) {
-        if (accountNum == null || accountNum.trim().isEmpty())
+    public AccountWrapper updateAccount(@PathParam("accNum") String accNum, AccountWrapper accWrapper) {
+        if (accNum == null || accNum.trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
-        Account account = accService.updateAccount(accountNum, accountWrapper.getAmount());
+        Account acc = accService.updateAccount(accNum, accWrapper.getAmount());
 
-        return new AccountWrapper(account.getNumber(), account.getAmount());
+        return new AccountWrapper(acc.getNumber(), acc.getAmount());
     }
 
     /**
      * Deletes user account.
      *
-     * @param accountNum user account number
+     * @param accNum user account number
      * @return user account representation
      * @throws IllegalArgumentException if request validation fails
      * @throws BusinessException        if business error happens
      */
     @DELETE
-    @Path("/{accountNum}")
+    @Path("/{accNum}")
     @Produces({APPLICATION_JSON})
-    public AccountWrapper deleteAccount(@PathParam("accountNum") String accountNum) {
-        if (accountNum == null || accountNum.trim().isEmpty())
+    public AccountWrapper deleteAccount(@PathParam("accNum") String accNum) {
+        if (accNum == null || accNum.trim().isEmpty())
             throw new IllegalArgumentException("Account number cannot be null or empty. ");
 
-        Account account = accService.deleteAccount(accountNum);
+        Account acc = accService.deleteAccount(accNum);
 
-        return new AccountWrapper(account.getNumber(), account.getAmount());
+        return new AccountWrapper(acc.getNumber(), acc.getAmount());
     }
 
+    /**
+     * Delegates requests for manipulation with transaction to responsible endpoint.
+     *
+     * @return transaction endpoint
+     */
     @Path("/tx")
     public TransactionEndpoint getTxEndpoint() {
         return txEndpoint;

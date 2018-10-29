@@ -25,8 +25,11 @@ import static java.util.Objects.nonNull;
  */
 public class App {
 
+    private static final String SERVER_IP = "http://localhost";
+    private static final int SERVER_PORT = 9998;
+
     public static void main(String[] args) {
-        URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
+        URI baseUri = UriBuilder.fromUri(SERVER_IP).port(SERVER_PORT).build();
         ResourceConfig config = new JerseyConfig();
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
 

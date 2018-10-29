@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static java.util.Objects.requireNonNull;
@@ -41,13 +40,13 @@ public class AccountDatastore {
     /**
      * Creates user account.
      *
-     * @param newAccount user account
+     * @param newAcc user account
      * @throws DatastoreException if user account already exists
      */
-    public void createAccount(Account newAccount) throws DatastoreException {
-        String accountNum = newAccount.getNumber();
+    public void createAccount(Account newAcc) throws DatastoreException {
+        String accountNum = newAcc.getNumber();
 
-        Account account = userAccounts.putIfAbsent(accountNum, newAccount);
+        Account account = userAccounts.putIfAbsent(accountNum, newAcc);
 
         if (account != null)
             throw new DatastoreException("Account '" + accountNum + "' already exists. ");
@@ -56,15 +55,15 @@ public class AccountDatastore {
     /**
      * Gets user account by its number.
      *
-     * @param accountNum user account number
+     * @param accNum user account number
      * @return user account
      * @throws DatastoreException if user account isn't found
      */
-    public Account getAccount(String accountNum) throws DatastoreException {
-        Account account = userAccounts.get(accountNum);
+    public Account getAccount(String accNum) throws DatastoreException {
+        Account account = userAccounts.get(accNum);
 
         if (account == null)
-            throw new DatastoreException("Account '" + accountNum + "' is not found. ");
+            throw new DatastoreException("Account '" + accNum + "' is not found. ");
 
         return account;
     }
@@ -81,16 +80,16 @@ public class AccountDatastore {
     /**
      * Deletes user account.
      *
-     * @param account user account
+     * @param acc user account
      * @throws DatastoreException if user account isn't found
      */
-    public void deleteAccount(Account account) throws DatastoreException {
-        String accountNum = account.getNumber();
+    public void deleteAccount(Account acc) throws DatastoreException {
+        String accNum = acc.getNumber();
 
-        boolean deleted = userAccounts.remove(accountNum, account);
+        boolean deleted = userAccounts.remove(accNum, acc);
 
         if (!deleted)
-            throw new DatastoreException("Account '" + accountNum + "' is not found. ");
+            throw new DatastoreException("Account '" + accNum + "' is not found. ");
     }
 
 }

@@ -41,7 +41,7 @@ public class AccountServiceTest {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountDatastore datastore = new AccountDatastore(storage) {
             @Override
-            public void createAccount(Account newAccount) throws DatastoreException {
+            public void createAccount(Account newAcc) throws DatastoreException {
                 throw new DatastoreException("Account already exists. ");
             }
         };
@@ -75,7 +75,7 @@ public class AccountServiceTest {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountDatastore datastore = new AccountDatastore(storage) {
             @Override
-            public Account getAccount(String accountNum) throws DatastoreException {
+            public Account getAccount(String accNum) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };
@@ -132,7 +132,7 @@ public class AccountServiceTest {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountDatastore datastore = new AccountDatastore(storage) {
             @Override
-            public void deleteAccount(Account account) throws DatastoreException {
+            public void deleteAccount(Account acc) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };
@@ -166,7 +166,7 @@ public class AccountServiceTest {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountDatastore datastore = new AccountDatastore(storage) {
             @Override
-            public Account getAccount(String accountNum) throws DatastoreException {
+            public Account getAccount(String accNum) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };
@@ -205,7 +205,7 @@ public class AccountServiceTest {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
         AccountDatastore datastore = new AccountDatastore(storage) {
             @Override
-            public Account getAccount(String accountNum) throws DatastoreException {
+            public Account getAccount(String accNum) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };

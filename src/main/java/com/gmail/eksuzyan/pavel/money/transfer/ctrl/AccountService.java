@@ -44,32 +44,32 @@ public class AccountService {
     /**
      * Creates user account.
      *
-     * @param accountNum    user account number
-     * @param initialAmount user account initial amount
+     * @param accNum     user account number
+     * @param initAmount user account initial amount
      * @throws BusinessException if user account cannot be created
      */
-    public void createAccount(String accountNum, Double initialAmount) {
-        Account account = new Account(accountNum, initialAmount);
+    public void createAccount(String accNum, Double initAmount) {
+        Account account = new Account(accNum, initAmount);
 
         try {
             datastore.createAccount(account);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not create an account '" + accountNum + "'. ", e);
+            throw new BusinessException("Could not create an account '" + accNum + "'. ", e);
         }
     }
 
     /**
      * Gets user account by its number.
      *
-     * @param accountNum user account number
+     * @param accNum user account number
      * @return user account
      * @throws BusinessException if user account cannot be got
      */
-    public Account getAccount(String accountNum) {
+    public Account getAccount(String accNum) {
         try {
-            return datastore.getAccount(accountNum);
+            return datastore.getAccount(accNum);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not get an account '" + accountNum + "'. ", e);
+            throw new BusinessException("Could not get an account '" + accNum + "'. ", e);
         }
     }
 
@@ -86,39 +86,39 @@ public class AccountService {
     /**
      * Updates user account amount to newer value.
      *
-     * @param accountNum user account number
-     * @param newAmount  new amount
+     * @param accNum    user account number
+     * @param newAmount new amount
      * @return user account
      * @throws BusinessException if user account cannot be updated
      */
-    public Account updateAccount(String accountNum, Double newAmount) {
+    public Account updateAccount(String accNum, Double newAmount) {
         try {
-            Account account = datastore.getAccount(accountNum);
+            Account acc = datastore.getAccount(accNum);
 
-            account.setAmount(newAmount);
+            acc.setAmount(newAmount);
 
-            return account;
+            return acc;
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not update an account '" + accountNum + "'. ", e);
+            throw new BusinessException("Could not update an account '" + accNum + "'. ", e);
         }
     }
 
     /**
      * Deletes user account.
      *
-     * @param accountNum user account number
+     * @param accNum user account number
      * @return user account
      * @throws BusinessException if user account cannot be deleted
      */
-    public Account deleteAccount(String accountNum) {
+    public Account deleteAccount(String accNum) {
         try {
-            Account account = datastore.getAccount(accountNum);
+            Account acc = datastore.getAccount(accNum);
 
-            datastore.deleteAccount(account);
+            datastore.deleteAccount(acc);
 
-            return account;
+            return acc;
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not delete an account '" + accountNum + "'. ", e);
+            throw new BusinessException("Could not delete an account '" + accNum + "'. ", e);
         }
     }
 
@@ -131,17 +131,17 @@ public class AccountService {
      * @throws BusinessException if transfer cannot be performed
      */
     public List<Account> transferMoney(String srcNum, String destNum, Double amount) {
-        Account srcAccount, destAccount;
+        Account srcAcc, destAcc;
         try {
-            srcAccount = datastore.getAccount(srcNum);
-            destAccount = datastore.getAccount(destNum);
+            srcAcc = datastore.getAccount(srcNum);
+            destAcc = datastore.getAccount(destNum);
         } catch (DatastoreException e) {
             throw new BusinessException("Could not transfer money from '" + srcNum + "' to '" + destNum + "'. ", e);
         }
 
-        srcAccount.transferTo(destAccount, amount);
+        srcAcc.transferTo(destAcc, amount);
 
-        return Stream.of(srcAccount, destAccount).collect(toList());
+        return Stream.of(srcAcc, destAcc).collect(toList());
     }
 
 }
