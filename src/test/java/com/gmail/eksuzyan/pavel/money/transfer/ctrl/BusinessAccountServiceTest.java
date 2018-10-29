@@ -1,5 +1,6 @@
 package com.gmail.eksuzyan.pavel.money.transfer.ctrl;
 
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  * @author Pavel Eksuzian.
  *         Created: 20.10.2018.
  */
-public class AccountServiceTest {
+public class BusinessAccountServiceTest {
 
     @Test
     public void testCreateAccountPositive() {

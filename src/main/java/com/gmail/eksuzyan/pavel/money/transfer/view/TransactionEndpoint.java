@@ -13,7 +13,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import java.util.Collection;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.collectingAndThen;
@@ -40,7 +39,7 @@ public class TransactionEndpoint {
      * Main constructor to build up transaction endpoint with passed accService.
      *
      * @param accService account service
-     * @throws NullPointerException if accService is null
+     * @throws NullPointerException if account service is null
      */
     @Inject
     public TransactionEndpoint(AccountService accService) {
@@ -59,18 +58,6 @@ public class TransactionEndpoint {
     @Consumes({APPLICATION_JSON})
     @Produces({APPLICATION_JSON})
     public AccountsWrapper transferMoney(TransactionWrapper tx) {
-        if (tx.getSrcNum() == null || tx.getSrcNum().trim().isEmpty())
-            throw new IllegalArgumentException("Source account number cannot be null or empty. ");
-
-        if (tx.getDestNum() == null || tx.getDestNum().trim().isEmpty())
-            throw new IllegalArgumentException("Destination account number cannot be null or empty. ");
-
-        if (Objects.equals(tx.getSrcNum(), tx.getDestNum()))
-            throw new IllegalArgumentException("Account numbers are the same. ");
-
-        if (tx.getAmount() == null || tx.getAmount() <= 0)
-            throw new IllegalArgumentException("Transfer amount cannot be null, negative or zero. ");
-
         Collection<Account> accounts = accService.transferMoney(tx.getSrcNum(), tx.getDestNum(), tx.getAmount());
 
         return accounts.stream()

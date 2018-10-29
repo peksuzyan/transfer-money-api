@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.money.transfer;
 
-import com.gmail.eksuzyan.pavel.money.transfer.view.OldAccountEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
@@ -38,7 +38,7 @@ class AppRunner implements AutoCloseable {
     private final AtomicLong totalInitialAmount = new AtomicLong();
     private final AtomicLong totalFiniteAmount = new AtomicLong();
 
-    private final OldAccountEndpoint rest = new OldAccountEndpoint();
+    private final AccountEndpoint rest = null;
     private final ExecutorService threadPool = Executors.newFixedThreadPool(16);
 
     private final int accountsCount;
@@ -226,7 +226,8 @@ class AppRunner implements AutoCloseable {
         @Override
         public void run() {
             try {
-                AccountWrapper account = rest.createAccount(number, initialAmount);
+                AccountWrapper account = null;
+//                AccountWrapper account = rest.createAccount(number, initialAmount);
                 System.out.println("Created: " + account);
                 totalInitialAmount.addAndGet(account.getAmount().longValue());
             } catch (Exception e) {
@@ -251,7 +252,8 @@ class AppRunner implements AutoCloseable {
         @Override
         public void run() {
             try {
-                TransactionWrapper transaction = rest.transferMoney(fromAccountNum, toAccountNum, amount);
+                TransactionWrapper transaction = null;
+//                TransactionWrapper transaction = rest.transferMoney(fromAccountNum, toAccountNum, amount);
                 System.out.println("Transferred: " + transaction);
             } catch (Exception e) {
                 System.out.println("Not transferred: " + e);

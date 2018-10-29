@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * HK2 dependency injection framework binder.
+ * HK2 dependency injection binder.
  *
  * @author Pavel Eksuzian.
  *         Created: 28.10.2018.

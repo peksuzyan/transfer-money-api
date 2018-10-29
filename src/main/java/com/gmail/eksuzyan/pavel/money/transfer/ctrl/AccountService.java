@@ -8,8 +8,10 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreExcepti
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
+import static com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account.transferAmount;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
@@ -46,9 +48,16 @@ public class AccountService {
      *
      * @param accNum     user account number
      * @param initAmount user account initial amount
-     * @throws BusinessException if user account cannot be created
+     * @throws IllegalArgumentException if account validation fails
+     * @throws BusinessException        if user account cannot be created
      */
     public void createAccount(String accNum, Double initAmount) {
+        if (accNum == null || accNum.trim().isEmpty())
+            throw new IllegalArgumentException("Account number cannot be null or empty. ");
+
+        if (initAmount == null || initAmount < 0)
+            throw new IllegalArgumentException("Initial amount cannot be null or negative. ");
+
         Account account = new Account(accNum, initAmount);
 
         try {
@@ -63,9 +72,13 @@ public class AccountService {
      *
      * @param accNum user account number
      * @return user account
-     * @throws BusinessException if user account cannot be got
+     * @throws IllegalArgumentException if account number validation fails
+     * @throws BusinessException        if user account cannot be got
      */
     public Account getAccount(String accNum) {
+        if (accNum == null || accNum.trim().isEmpty())
+            throw new IllegalArgumentException("Account number cannot be null or empty. ");
+
         try {
             return datastore.getAccount(accNum);
         } catch (DatastoreException e) {
@@ -89,9 +102,16 @@ public class AccountService {
      * @param accNum    user account number
      * @param newAmount new amount
      * @return user account
-     * @throws BusinessException if user account cannot be updated
+     * @throws IllegalArgumentException if account validation fails
+     * @throws BusinessException        if user account cannot be updated
      */
     public Account updateAccount(String accNum, Double newAmount) {
+        if (accNum == null || accNum.trim().isEmpty())
+            throw new IllegalArgumentException("Account number cannot be null or empty. ");
+
+        if (newAmount == null)
+            throw new IllegalArgumentException("Account amount cannot be null. ");
+
         try {
             Account acc = datastore.getAccount(accNum);
 
@@ -108,9 +128,13 @@ public class AccountService {
      *
      * @param accNum user account number
      * @return user account
-     * @throws BusinessException if user account cannot be deleted
+     * @throws IllegalArgumentException if account number validation fails
+     * @throws BusinessException        if user account cannot be deleted
      */
     public Account deleteAccount(String accNum) {
+        if (accNum == null || accNum.trim().isEmpty())
+            throw new IllegalArgumentException("Account number cannot be null or empty. ");
+
         try {
             Account acc = datastore.getAccount(accNum);
 
@@ -128,9 +152,22 @@ public class AccountService {
      * @param srcNum  user account number where amount is withdrawn from
      * @param destNum user account number where amount is deposited in
      * @param amount  amount of money to transfer
-     * @throws BusinessException if transfer cannot be performed
+     * @throws IllegalArgumentException if transaction validation fails
+     * @throws BusinessException        if transfer cannot be performed
      */
     public List<Account> transferMoney(String srcNum, String destNum, Double amount) {
+        if (srcNum == null || srcNum.trim().isEmpty())
+            throw new IllegalArgumentException("Account number cannot be null or empty. ");
+
+        if (destNum == null || destNum.trim().isEmpty())
+            throw new IllegalArgumentException("Account number cannot be null or empty. ");
+
+        if (Objects.equals(srcNum, destNum))
+            throw new IllegalArgumentException("Account numbers are the same. ");
+
+        if (amount == null || amount <= 0)
+            throw new IllegalArgumentException("Transfer amount cannot be negative or zero. ");
+
         Account srcAcc, destAcc;
         try {
             srcAcc = datastore.getAccount(srcNum);
@@ -139,9 +176,10 @@ public class AccountService {
             throw new BusinessException("Could not transfer money from '" + srcNum + "' to '" + destNum + "'. ", e);
         }
 
-        srcAcc.transferTo(destAcc, amount);
+        transferAmount(srcAcc, destAcc, amount);
 
         return Stream.of(srcAcc, destAcc).collect(toList());
     }
+
 
 }

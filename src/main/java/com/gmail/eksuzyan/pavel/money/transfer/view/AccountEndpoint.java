@@ -37,11 +37,11 @@ public class AccountEndpoint {
     private final TransactionEndpoint txEndpoint;
 
     /**
-     * Main constructor to build up account endpoint with passed accService.
+     * Single constructor.
      *
      * @param accService account service
      * @param txEndpoint transaction endpoint
-     * @throws NullPointerException if accService is null
+     * @throws NullPointerException if account service or transaction endpoint is null
      */
     @Inject
     public AccountEndpoint(AccountService accService, TransactionEndpoint txEndpoint) {
@@ -61,12 +61,6 @@ public class AccountEndpoint {
     @Consumes({APPLICATION_JSON})
     @Produces({APPLICATION_JSON})
     public AccountWrapper createAccount(AccountWrapper acc) {
-        if (acc.getNumber() == null || acc.getNumber().trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
-        if (acc.getAmount() == null || acc.getAmount() < 0)
-            throw new IllegalArgumentException("Initial amount cannot be null or negative. ");
-
         accService.createAccount(acc.getNumber(), acc.getAmount());
 
         return acc;
@@ -84,9 +78,6 @@ public class AccountEndpoint {
     @Path("/{accNum}")
     @Produces({APPLICATION_JSON})
     public AccountWrapper getAccount(@PathParam("accNum") String accNum) {
-        if (accNum == null || accNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
         Account acc = accService.getAccount(accNum);
 
         return new AccountWrapper(acc.getNumber(), acc.getAmount());
@@ -119,9 +110,6 @@ public class AccountEndpoint {
     @Produces({APPLICATION_JSON})
     @Consumes({APPLICATION_JSON})
     public AccountWrapper updateAccount(@PathParam("accNum") String accNum, AccountWrapper accWrapper) {
-        if (accNum == null || accNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
         Account acc = accService.updateAccount(accNum, accWrapper.getAmount());
 
         return new AccountWrapper(acc.getNumber(), acc.getAmount());
@@ -139,9 +127,6 @@ public class AccountEndpoint {
     @Path("/{accNum}")
     @Produces({APPLICATION_JSON})
     public AccountWrapper deleteAccount(@PathParam("accNum") String accNum) {
-        if (accNum == null || accNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
         Account acc = accService.deleteAccount(accNum);
 
         return new AccountWrapper(acc.getNumber(), acc.getAmount());

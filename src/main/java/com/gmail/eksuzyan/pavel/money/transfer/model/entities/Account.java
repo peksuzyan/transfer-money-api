@@ -69,46 +69,49 @@ public class Account {
     }
 
     /**
-     * Withdraws <code>amount</code> from this user account and deposits in <code>other</code> one.
+     * Withdraws <code>amount</code> from <code>srcAcc</code> user account and deposits in <code>destAcc</code> one.
      *
-     * @param other  user account where money is being transferred to
-     * @param amount amount of money to transfer
+     * @param srcAcc  user account where money is being transferred from
+     * @param destAcc user account where money is being transferred to
+     * @param amount  amount of money to transfer
      * @throws BusinessException if this user account doesn't have enough amount to transfer
      */
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-    public void transferTo(Account other, Double amount) throws BusinessException {
-        final int thisHash = identityHashCode(this);
-        final int otherHash = identityHashCode(other);
+    public static void transferAmount(Account srcAcc, Account destAcc, Double amount) throws BusinessException {
+        final int srcHash = identityHashCode(srcAcc);
+        final int destHash = identityHashCode(destAcc);
 
-        if (thisHash < otherHash) {
-            synchronized (this) {
-                synchronized (other) {
-                    transfer(this, other, amount);
+        if (srcHash < destHash) {
+            synchronized (srcAcc) {
+                synchronized (destAcc) {
+                    transfer(srcAcc, destAcc, amount);
                 }
             }
-        } else if (thisHash > otherHash) {
-            synchronized (other) {
-                synchronized (this) {
-                    transfer(this, other, amount);
+        } else if (srcHash > destHash) {
+            synchronized (destAcc) {
+                synchronized (srcAcc) {
+                    transfer(srcAcc, destAcc, amount);
                 }
             }
         } else {
             synchronized (GLOBAL_LOCK) {
-                synchronized (this) {
-                    synchronized (other) {
-                        transfer(this, other, amount);
+                synchronized (srcAcc) {
+                    synchronized (destAcc) {
+                        transfer(srcAcc, destAcc, amount);
                     }
                 }
             }
         }
     }
 
-    private static void transfer(Account from, Account to, Double amount) {
-        if (from.amount < amount)
+    private static void transfer(Account srcAcc, Account destAcc, Double amount) {
+        if (srcAcc.getAmount() < amount)
             throw new BusinessException(
-                    "Could not transfer from '" + from.number + "' to '" + to.number + "'. Reason: Not enough money. ");
+                    "Could not transfer from '" + srcAcc.number + "' to '" +
+                            destAcc.number + "'. Reason: Not enough money. ");
 
-        from.amount -= amount;
-        to.amount += amount;
+        srcAcc.amount -= amount;
+        destAcc.amount += amount;
     }
+
 }
