@@ -12,7 +12,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,7 +21,7 @@ import static java.util.Objects.requireNonNull;
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- * Created: 10/17/2018.
+ *         Created: 10/17/2018.
  */
 public class OldAccountEndpoint {
 
@@ -38,9 +37,6 @@ public class OldAccountEndpoint {
         this(new AccountService(new AccountDatastore(null)));
     }
 
-    @GET
-    @Path("test")
-    @Produces(MediaType.TEXT_PLAIN)
     public String test() {
         return "Test";
     }

@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toMap;
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- * Created: 10/17/2018.
+ *         Created: 10/17/2018.
  */
 public class AccountService {
 

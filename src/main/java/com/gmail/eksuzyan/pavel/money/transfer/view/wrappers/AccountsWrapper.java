@@ -10,7 +10,7 @@ import java.util.Collection;
  * Not thread-safe.
  *
  * @author Pavel Eksuzian.
- * Created: 26.10.2018.
+ *         Created: 26.10.2018.
  */
 @XmlRootElement
 public class AccountsWrapper {

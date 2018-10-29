@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author Pavel Eksuzian.
- * Created: 20.10.2018.
+ *         Created: 20.10.2018.
  */
 public class AccountServiceTest {
 

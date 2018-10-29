@@ -4,7 +4,7 @@ package com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions;
  * Business exception is responsible for business errors. Used for wrapping low-layer checked exceptions.
  *
  * @author Pavel Eksuzian.
- * Created: 10/17/2018.
+ *         Created: 10/17/2018.
  */
 public class BusinessException extends RuntimeException {
 

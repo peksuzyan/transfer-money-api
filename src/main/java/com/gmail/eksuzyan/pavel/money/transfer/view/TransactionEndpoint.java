@@ -8,7 +8,6 @@ import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountsWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,7 +21,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
  * @author Pavel Eksuzian.
- * Created: 28.10.2018.
+ *         Created: 28.10.2018.
  */
 @Path("/tx")
 public class TransactionEndpoint {

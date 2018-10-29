@@ -18,14 +18,14 @@ import static java.util.Objects.requireNonNull;
  * Unconditionally thread-safe.
  *
  * @author Pavel Eksuzian.
- * Created: 10/17/2018.
+ *         Created: 10/17/2018.
  */
 public class AccountDatastore {
 
     /**
      * Underlying storage.
      */
-    private ConcurrentHashMap<String, Account> userAccounts;
+    private ConcurrentMap<String, Account> userAccounts;
 
     /**
      * Main constructor to build up datastore with passed storage.
@@ -34,7 +34,7 @@ public class AccountDatastore {
      * @throws NullPointerException if storage is null
      */
     @Inject
-    public AccountDatastore(@Named("storage") ConcurrentHashMap<String, Account> userAccounts) {
+    public AccountDatastore(@Named("storage") ConcurrentMap<String, Account> userAccounts) {
         this.userAccounts = requireNonNull(userAccounts);
     }
 

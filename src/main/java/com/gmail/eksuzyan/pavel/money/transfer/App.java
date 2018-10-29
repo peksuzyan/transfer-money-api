@@ -21,7 +21,7 @@ import static java.util.Objects.nonNull;
  * Entry point for simulating access and manipulation with RESTful API for user account processing.
  *
  * @author Pavel Eksuzian.
- * Created: 10/19/2018.
+ *         Created: 10/19/2018.
  */
 public class App {
 

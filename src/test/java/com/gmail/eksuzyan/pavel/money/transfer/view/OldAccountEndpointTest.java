@@ -4,7 +4,7 @@ import org.junit.Test;
 
 /**
  * @author Pavel Eksuzian.
- * Created: 20.10.2018.
+ *         Created: 20.10.2018.
  */
 public class OldAccountEndpointTest {
 

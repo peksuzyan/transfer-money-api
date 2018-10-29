@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Not thread-safe.
  *
  * @author Pavel Eksuzian.
- * Created: 10/18/2018.
+ *         Created: 10/18/2018.
  */
 @XmlRootElement
 public class TransactionWrapper {

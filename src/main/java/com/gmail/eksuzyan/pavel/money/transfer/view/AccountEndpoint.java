@@ -7,7 +7,6 @@ import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountsWrapper;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.ws.rs.*;
 import java.util.Collection;
 
@@ -17,7 +16,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
  * @author Pavel Eksuzian.
- * Created: 10/25/2018.
+ *         Created: 10/25/2018.
  */
 @Path("/accounts")
 public class AccountEndpoint {
