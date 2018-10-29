@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.money.transfer.util.di;
+package com.gmail.eksuzyan.pavel.money.transfer.it.util;
 
 import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.money.transfer.unit.model.AccountDatastore;
@@ -10,20 +10,19 @@ import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import javax.inject.Singleton;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-/**
- * HK2 dependency injection binder.
- *
- * @author Pavel Eksuzian.
- *         Created: 28.10.2018.
- */
-public final class Hk2Binder extends AbstractBinder {
+import static java.util.Objects.requireNonNull;
 
-    /**
-     * Declares and binds injectable resources (i.e. implementations) with their contracts.
-     */
+/**
+ * @author Pavel Eksuzian.
+ * Created: 29.10.2018.
+ */
+@SuppressWarnings("Duplicates")
+public final class MockHk2Binder extends AbstractBinder {
+
+    public static ConcurrentMap<String, Account> storage;
+
     @Override
     protected void configure() {
         bindFactory(StorageFactory.class).to(new TypeLiteral<ConcurrentMap<String, Account>>() {
@@ -39,7 +38,7 @@ public final class Hk2Binder extends AbstractBinder {
 
         @Override
         public ConcurrentMap<String, Account> provide() {
-            return new ConcurrentHashMap<>();
+            return requireNonNull(storage);
         }
 
         @Override
@@ -47,5 +46,4 @@ public final class Hk2Binder extends AbstractBinder {
             if (instance != null) instance.clear();
         }
     }
-
 }

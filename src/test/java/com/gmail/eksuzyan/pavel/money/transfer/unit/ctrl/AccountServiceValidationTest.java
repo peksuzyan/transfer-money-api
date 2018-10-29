@@ -1,15 +1,17 @@
-package com.gmail.eksuzyan.pavel.money.transfer.ctrl;
+package com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl;
 
-import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.AccountDatastore;
 import org.junit.Test;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Unit testing.
+ *
  * @author Pavel Eksuzian.
  *         Created: 10/29/2018.
  */
-public class ValidationAccountServiceTest {
+public class AccountServiceValidationTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateAccountThrowsAccountNumCannotBeNull() {

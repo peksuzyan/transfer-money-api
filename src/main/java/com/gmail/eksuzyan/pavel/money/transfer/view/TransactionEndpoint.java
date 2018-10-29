@@ -1,8 +1,8 @@
 package com.gmail.eksuzyan.pavel.money.transfer.view;
 
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
-import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.AccountService;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.exceptions.BusinessException;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountsWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;

@@ -1,7 +1,7 @@
-package com.gmail.eksuzyan.pavel.money.transfer.model;
+package com.gmail.eksuzyan.pavel.money.transfer.unit.model;
 
-import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
-import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.exceptions.DatastoreException;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
+ * Unit testing.
+ *
  * @author Pavel Eksuzian.
  *         Created: 20.10.2018.
  */

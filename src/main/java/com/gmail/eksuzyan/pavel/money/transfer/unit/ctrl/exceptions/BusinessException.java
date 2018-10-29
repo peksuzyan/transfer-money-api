@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions;
+package com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.exceptions;
 
 /**
  * Business exception is responsible for business errors. Used for wrapping low-layer checked exceptions.

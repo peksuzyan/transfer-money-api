@@ -1,9 +1,9 @@
-package com.gmail.eksuzyan.pavel.money.transfer.ctrl;
+package com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl;
 
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
-import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
-import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
-import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.exceptions.BusinessException;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.exceptions.DatastoreException;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account.transferAmount;
+import static com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account.transferAmount;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;

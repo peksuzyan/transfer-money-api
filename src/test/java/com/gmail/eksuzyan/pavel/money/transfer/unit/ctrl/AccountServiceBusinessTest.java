@@ -1,10 +1,9 @@
-package com.gmail.eksuzyan.pavel.money.transfer.ctrl;
+package com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl;
 
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
-import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
-import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
-import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.exceptions.BusinessException;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.model.exceptions.DatastoreException;
 import org.junit.Test;
 
 import java.util.Map;
@@ -15,10 +14,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * Unit testing.
+ *
  * @author Pavel Eksuzian.
- *         Created: 20.10.2018.
+ * Created: 20.10.2018.
  */
-public class BusinessAccountServiceTest {
+public class AccountServiceBusinessTest {
 
     @Test
     public void testCreateAccountPositive() {

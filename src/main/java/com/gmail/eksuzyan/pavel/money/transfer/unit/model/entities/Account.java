@@ -1,6 +1,6 @@
-package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
+package com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities;
 
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
+import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.exceptions.BusinessException;
 
 import static java.lang.System.identityHashCode;
 
