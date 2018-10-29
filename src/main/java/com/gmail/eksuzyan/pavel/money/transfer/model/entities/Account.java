@@ -104,6 +104,16 @@ public class Account {
         }
     }
 
+    /**
+     * Transfers money finally.
+     * <p>
+     * Thread-safety: must be protected by synchronization before being used.
+     *
+     * @param srcAcc  user account where money is being transferred from
+     * @param destAcc user account where money is being transferred to
+     * @param amount  amount of money to transfer
+     * @throws BusinessException if this user account doesn't have enough amount to transfer
+     */
     private static void transfer(Account srcAcc, Account destAcc, Double amount) {
         if (srcAcc.getAmount() < amount)
             throw new BusinessException(
