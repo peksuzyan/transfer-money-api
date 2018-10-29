@@ -5,6 +5,7 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -30,19 +31,13 @@ public class AccountService {
     private final AccountDatastore datastore;
 
     /**
-     * Default constructor to build up service with in-memory datastore.
-     */
-    public AccountService() {
-        this(new AccountDatastore());
-    }
-
-    /**
      * Main constructor to build up service with passed datastore.
      *
      * @param datastore datastore
      * @throws NullPointerException if datastore is null
      */
-    AccountService(AccountDatastore datastore) {
+    @Inject
+    public AccountService(AccountDatastore datastore) {
         this.datastore = requireNonNull(datastore);
     }
 

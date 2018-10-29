@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.money.transfer;
 
-import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.util.rs.JerseyConfig;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -27,7 +27,7 @@ public class App {
 
     public static void main(String[] args) {
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
-        ResourceConfig config = new ResourceConfig(AccountEndpoint.class);
+        ResourceConfig config = new JerseyConfig();
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {

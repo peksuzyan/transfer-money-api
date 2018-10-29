@@ -3,6 +3,8 @@ package com.gmail.eksuzyan.pavel.money.transfer.model;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,14 +25,7 @@ public class AccountDatastore {
     /**
      * Underlying storage.
      */
-    private final ConcurrentMap<String, Account> userAccounts;
-
-    /**
-     * Default constructor to build up datastore with {@link ConcurrentHashMap#ConcurrentHashMap()} as storage.
-     */
-    public AccountDatastore() {
-        this(new ConcurrentHashMap<>());
-    }
+    private ConcurrentHashMap<String, Account> userAccounts;
 
     /**
      * Main constructor to build up datastore with passed storage.
@@ -38,7 +33,8 @@ public class AccountDatastore {
      * @param userAccounts user accounts storage
      * @throws NullPointerException if storage is null
      */
-    public AccountDatastore(ConcurrentMap<String, Account> userAccounts) {
+    @Inject
+    public AccountDatastore(@Named("storage") ConcurrentHashMap<String, Account> userAccounts) {
         this.userAccounts = requireNonNull(userAccounts);
     }
 

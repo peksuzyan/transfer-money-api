@@ -2,6 +2,7 @@ package com.gmail.eksuzyan.pavel.money.transfer.view;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
+import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
@@ -11,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,7 +35,7 @@ public class OldAccountEndpoint {
      * Default constructor to build up endpoint with default service.
      */
     public OldAccountEndpoint() {
-        this(new AccountService());
+        this(new AccountService(new AccountDatastore(null)));
     }
 
     @GET
