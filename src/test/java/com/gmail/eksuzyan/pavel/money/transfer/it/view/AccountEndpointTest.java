@@ -1,10 +1,10 @@
-package com.gmail.eksuzyan.pavel.money.transfer.it;
+package com.gmail.eksuzyan.pavel.money.transfer.it.view;
 
-import com.gmail.eksuzyan.pavel.money.transfer.it.util.MockHk2Binder;
+import com.gmail.eksuzyan.pavel.money.transfer.it.view.util.MockHk2Binder;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.util.rs.JerseyConfig;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountsWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountsWrapper;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -88,6 +88,41 @@ public class AccountEndpointTest {
     }
 
     @Test
+    public void testCreateAccountReturnsNoContent() {
+        String accNum = "TEST-1";
+        Double accAmount = 1.0;
+        datastore.put(accNum, new Account(accNum, accAmount));
+        AccountWrapper expected = new AccountWrapper(accNum, accAmount);
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .buildPost(Entity.json(expected))
+                .invoke();
+
+        assertEquals(204, response.getStatus());
+    }
+
+    @Test
+    public void testCreateAccountReturnsBadRequest() {
+        String accNum = "";
+        Double accAmount = 1.0;
+        AccountWrapper expected = new AccountWrapper(accNum, accAmount);
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .buildPost(Entity.json(expected))
+                .invoke();
+
+        assertEquals(400, response.getStatus());
+    }
+
+    @Test
     public void testGetAccount() {
         String accNum = "TEST-1";
         Double accAmount = 1.0;
@@ -106,6 +141,23 @@ public class AccountEndpointTest {
         assertEquals(200, response.getStatus());
         assertEquals(accNum, actual.getNumber());
         assertEquals(accAmount, actual.getAmount());
+    }
+
+    @Test
+    public void testGetAccountReturnsNoContent() {
+        String accNum = "TEST-1";
+        Double accAmount = 1.0;
+        datastore.put(accNum, new Account(accNum, accAmount));
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts/" + "TEST-2")
+                .request()
+                .accept(APPLICATION_JSON)
+                .buildGet()
+                .invoke();
+
+        assertEquals(204, response.getStatus());
     }
 
     @Test
@@ -161,6 +213,46 @@ public class AccountEndpointTest {
     }
 
     @Test
+    public void testUpdateAccountReturnsNoContent() {
+        String accNum = "TEST-1";
+        Double accAmount = 1.0;
+        Double newAccAmount = 2.0;
+        datastore.put(accNum, new Account(accNum, accAmount));
+
+        AccountWrapper expected = new AccountWrapper(null, newAccAmount);
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts/" + "TEST-2")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .buildPut(Entity.json(expected))
+                .invoke();
+
+        assertEquals(204, response.getStatus());
+    }
+
+    @Test
+    public void testUpdateAccountReturnsBadRequest() {
+        String accNum = "TEST-1";
+        Double accAmount = 1.0;
+        Double newAccAmount = null;
+        datastore.put(accNum, new Account(accNum, accAmount));
+
+        AccountWrapper expected = new AccountWrapper(null, newAccAmount);
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts/" + accNum)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .buildPut(Entity.json(expected))
+                .invoke();
+
+        assertEquals(400, response.getStatus());
+    }
+
+    @Test
     public void testDeleteAccount() {
         String accNum = "TEST-1";
         Double accAmount = 1.0;
@@ -179,6 +271,23 @@ public class AccountEndpointTest {
         assertEquals(200, response.getStatus());
         assertEquals(accNum, actual.getNumber());
         assertEquals(accAmount, actual.getAmount());
+    }
+
+    @Test
+    public void testDeleteAccountReturnsNoContent() {
+        String accNum = "TEST-1";
+        Double accAmount = 1.0;
+        datastore.put(accNum, new Account(accNum, accAmount));
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts/" + "TEST-2")
+                .request()
+                .accept(APPLICATION_JSON)
+                .buildDelete()
+                .invoke();
+
+        assertEquals(204, response.getStatus());
     }
 
 }

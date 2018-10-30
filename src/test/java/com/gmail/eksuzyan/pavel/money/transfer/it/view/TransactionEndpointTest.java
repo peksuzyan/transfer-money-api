@@ -1,11 +1,11 @@
-package com.gmail.eksuzyan.pavel.money.transfer.it;
+package com.gmail.eksuzyan.pavel.money.transfer.it.view;
 
-import com.gmail.eksuzyan.pavel.money.transfer.it.util.MockHk2Binder;
+import com.gmail.eksuzyan.pavel.money.transfer.it.view.util.MockHk2Binder;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.util.rs.JerseyConfig;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountsWrapper;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountsWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.tx.TransactionWrapper;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -95,6 +95,50 @@ public class TransactionEndpointTest {
                 Objects.equals(accNum1, acc.getNumber()) && Objects.equals(0.0, acc.getAmount())));
         assertTrue(accounts.stream().anyMatch(acc ->
                 Objects.equals(accNum2, acc.getNumber()) && Objects.equals(6.0, acc.getAmount())));
+    }
+
+    @Test
+    public void testTransferMoneyReturnsNoContent() {
+        String accNum1 = "TEST-1";
+        String accNum2 = "TEST-2";
+        Double accAmount1 = 1.0;
+        Double accAmount2 = 5.0;
+        datastore.put(accNum1, new Account(accNum1, accAmount1));
+        datastore.put(accNum2, new Account(accNum2, accAmount2));
+
+        TransactionWrapper tx = new TransactionWrapper(accNum1, accNum2, 2.0);
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts/tx")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .buildPost(Entity.json(tx))
+                .invoke();
+
+        assertEquals(204, response.getStatus());
+    }
+
+    @Test
+    public void testTransferMoneyReturnsBadRequest() {
+        String accNum1 = "TEST-1";
+        String accNum2 = "TEST-2";
+        Double accAmount1 = 1.0;
+        Double accAmount2 = 5.0;
+        datastore.put(accNum1, new Account(accNum1, accAmount1));
+        datastore.put(accNum2, new Account(accNum2, accAmount2));
+
+        TransactionWrapper tx = new TransactionWrapper("", accNum2, 1.0);
+
+        Response response = client
+                .target(TEST_URI)
+                .path("/accounts/tx")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .buildPost(Entity.json(tx))
+                .invoke();
+
+        assertEquals(400, response.getStatus());
     }
 
 }

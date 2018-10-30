@@ -1,9 +1,9 @@
 package com.gmail.eksuzyan.pavel.money.transfer.util.rs;
 
 import com.gmail.eksuzyan.pavel.money.transfer.util.di.Hk2Binder;
-import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
-import com.gmail.eksuzyan.pavel.money.transfer.view.handlers.RestExceptionMapper;
-import com.gmail.eksuzyan.pavel.money.transfer.view.TransactionEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.acc.AccountEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.handlers.ExceptionHandler;
+import com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.tx.TransactionEndpoint;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -32,6 +32,6 @@ public class JerseyConfig extends ResourceConfig {
 
         register(TransactionEndpoint.class);
         register(AccountEndpoint.class);
-        register(RestExceptionMapper.class);
+        register(ExceptionHandler.class);
     }
 }

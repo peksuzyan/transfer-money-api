@@ -1,7 +1,7 @@
 package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.NotEnoughMoneyException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.tx.NotEnoughMoneyException;
 
 import static java.lang.System.identityHashCode;
 

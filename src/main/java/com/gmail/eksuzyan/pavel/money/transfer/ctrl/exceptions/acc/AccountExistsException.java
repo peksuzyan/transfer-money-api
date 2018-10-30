@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom;
+package com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.acc;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;

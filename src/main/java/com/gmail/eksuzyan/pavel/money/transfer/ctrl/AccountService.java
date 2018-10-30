@@ -1,8 +1,8 @@
 package com.gmail.eksuzyan.pavel.money.transfer.ctrl;
 
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.AccountExistsException;
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.NotEnoughMoneyException;
-import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.NotFoundAccountException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.acc.AccountExistsException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.tx.NotEnoughMoneyException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.acc.NotFoundAccountException;
 import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;

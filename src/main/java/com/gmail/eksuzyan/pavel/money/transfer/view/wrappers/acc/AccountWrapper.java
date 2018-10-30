@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers;
+package com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

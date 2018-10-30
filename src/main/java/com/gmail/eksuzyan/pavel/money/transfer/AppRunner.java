@@ -1,8 +1,8 @@
 package com.gmail.eksuzyan.pavel.money.transfer;
 
-import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.TransactionWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.acc.AccountEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.tx.TransactionWrapper;
 
 import java.text.DecimalFormat;
 import java.text.Format;

@@ -1,10 +1,10 @@
-package com.gmail.eksuzyan.pavel.money.transfer.it.util;
+package com.gmail.eksuzyan.pavel.money.transfer.it.view.util;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
-import com.gmail.eksuzyan.pavel.money.transfer.view.AccountEndpoint;
-import com.gmail.eksuzyan.pavel.money.transfer.view.TransactionEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.acc.AccountEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.tx.TransactionEndpoint;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

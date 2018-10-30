@@ -1,10 +1,11 @@
-package com.gmail.eksuzyan.pavel.money.transfer.view;
+package com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.acc;
 
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
 import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
-import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountsWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.tx.TransactionEndpoint;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountWrapper;
+import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountsWrapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
