@@ -1,9 +1,11 @@
-package com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl;
+package com.gmail.eksuzyan.pavel.money.transfer.ctrl;
 
-import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.exceptions.BusinessException;
-import com.gmail.eksuzyan.pavel.money.transfer.unit.model.AccountDatastore;
-import com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account;
-import com.gmail.eksuzyan.pavel.money.transfer.unit.model.exceptions.DatastoreException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.AccountExistsException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.NotEnoughMoneyException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.NotFoundAccountException;
+import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
+import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account.transferAmount;
+import static com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account.transferAmount;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
@@ -49,7 +51,7 @@ public class AccountService {
      * @param accNum     user account number
      * @param initAmount user account initial amount
      * @throws IllegalArgumentException if account validation fails
-     * @throws BusinessException        if user account cannot be created
+     * @throws AccountExistsException   if user account already exists
      */
     public void createAccount(String accNum, Double initAmount) {
         if (accNum == null || accNum.trim().isEmpty())
@@ -58,12 +60,12 @@ public class AccountService {
         if (initAmount == null || initAmount < 0)
             throw new IllegalArgumentException("Initial amount cannot be null or negative. ");
 
-        Account account = new Account(accNum, initAmount);
+        Account acc = new Account(accNum, initAmount);
 
         try {
-            datastore.createAccount(account);
+            datastore.createAccount(acc);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not create an account '" + accNum + "'. ", e);
+            throw new AccountExistsException(acc, e);
         }
     }
 
@@ -73,7 +75,7 @@ public class AccountService {
      * @param accNum user account number
      * @return user account
      * @throws IllegalArgumentException if account number validation fails
-     * @throws BusinessException        if user account cannot be got
+     * @throws NotFoundAccountException if user account is not found
      */
     public Account getAccount(String accNum) {
         if (accNum == null || accNum.trim().isEmpty())
@@ -82,7 +84,7 @@ public class AccountService {
         try {
             return datastore.getAccount(accNum);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not get an account '" + accNum + "'. ", e);
+            throw new NotFoundAccountException(accNum, e);
         }
     }
 
@@ -103,7 +105,7 @@ public class AccountService {
      * @param newAmount new amount
      * @return user account
      * @throws IllegalArgumentException if account validation fails
-     * @throws BusinessException        if user account cannot be updated
+     * @throws NotFoundAccountException if user account is not found
      */
     public Account updateAccount(String accNum, Double newAmount) {
         if (accNum == null || accNum.trim().isEmpty())
@@ -119,7 +121,7 @@ public class AccountService {
 
             return acc;
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not update an account '" + accNum + "'. ", e);
+            throw new NotFoundAccountException(accNum, e);
         }
     }
 
@@ -129,7 +131,7 @@ public class AccountService {
      * @param accNum user account number
      * @return user account
      * @throws IllegalArgumentException if account number validation fails
-     * @throws BusinessException        if user account cannot be deleted
+     * @throws NotFoundAccountException if user account is not found
      */
     public Account deleteAccount(String accNum) {
         if (accNum == null || accNum.trim().isEmpty())
@@ -142,7 +144,7 @@ public class AccountService {
 
             return acc;
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not delete an account '" + accNum + "'. ", e);
+            throw new NotFoundAccountException(accNum, e);
         }
     }
 
@@ -153,7 +155,8 @@ public class AccountService {
      * @param destNum user account number where amount is deposited in
      * @param amount  amount of money to transfer
      * @throws IllegalArgumentException if transaction validation fails
-     * @throws BusinessException        if transfer cannot be performed
+     * @throws NotFoundAccountException if any account is not found
+     * @throws NotEnoughMoneyException  if source user account doesn't have enough amount
      */
     public List<Account> transferMoney(String srcNum, String destNum, Double amount) {
         if (srcNum == null || srcNum.trim().isEmpty())
@@ -168,12 +171,18 @@ public class AccountService {
         if (amount == null || amount <= 0)
             throw new IllegalArgumentException("Transfer amount cannot be negative or zero. ");
 
-        Account srcAcc, destAcc;
+        Account srcAcc;
         try {
             srcAcc = datastore.getAccount(srcNum);
+        } catch (DatastoreException e) {
+            throw new NotFoundAccountException(srcNum, e);
+        }
+
+        Account destAcc;
+        try {
             destAcc = datastore.getAccount(destNum);
         } catch (DatastoreException e) {
-            throw new BusinessException("Could not transfer money from '" + srcNum + "' to '" + destNum + "'. ", e);
+            throw new NotFoundAccountException(destNum, e);
         }
 
         transferAmount(srcAcc, destAcc, amount);

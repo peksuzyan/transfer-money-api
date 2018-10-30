@@ -1,6 +1,7 @@
-package com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities;
+package com.gmail.eksuzyan.pavel.money.transfer.model.entities;
 
-import com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl.exceptions.BusinessException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.BusinessException;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.exceptions.custom.NotEnoughMoneyException;
 
 import static java.lang.System.identityHashCode;
 
@@ -74,7 +75,7 @@ public class Account {
      * @param srcAcc  user account where money is being transferred from
      * @param destAcc user account where money is being transferred to
      * @param amount  amount of money to transfer
-     * @throws BusinessException if this user account doesn't have enough amount to transfer
+     * @throws BusinessException if source user account doesn't have enough amount to transfer
      */
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public static void transferAmount(Account srcAcc, Account destAcc, Double amount) throws BusinessException {
@@ -116,9 +117,7 @@ public class Account {
      */
     private static void transfer(Account srcAcc, Account destAcc, Double amount) {
         if (srcAcc.getAmount() < amount)
-            throw new BusinessException(
-                    "Could not transfer from '" + srcAcc.number + "' to '" +
-                            destAcc.number + "'. Reason: Not enough money. ");
+            throw new NotEnoughMoneyException(srcAcc, destAcc);
 
         srcAcc.amount -= amount;
         destAcc.amount += amount;

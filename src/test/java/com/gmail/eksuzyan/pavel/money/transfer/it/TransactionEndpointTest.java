@@ -1,7 +1,7 @@
 package com.gmail.eksuzyan.pavel.money.transfer.it;
 
 import com.gmail.eksuzyan.pavel.money.transfer.it.util.MockHk2Binder;
-import com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account;
+import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
 import com.gmail.eksuzyan.pavel.money.transfer.util.rs.JerseyConfig;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.AccountsWrapper;

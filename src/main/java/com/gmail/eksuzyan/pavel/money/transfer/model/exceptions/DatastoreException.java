@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.money.transfer.unit.model.exceptions;
+package com.gmail.eksuzyan.pavel.money.transfer.model.exceptions;
 
 /**
  * Datastore exception is responsible for errors while working with datastore.

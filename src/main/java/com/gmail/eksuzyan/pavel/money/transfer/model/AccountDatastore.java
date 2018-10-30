@@ -1,7 +1,7 @@
-package com.gmail.eksuzyan.pavel.money.transfer.unit.model;
+package com.gmail.eksuzyan.pavel.money.transfer.model;
 
-import com.gmail.eksuzyan.pavel.money.transfer.unit.model.entities.Account;
-import com.gmail.eksuzyan.pavel.money.transfer.unit.model.exceptions.DatastoreException;
+import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
+import com.gmail.eksuzyan.pavel.money.transfer.model.exceptions.DatastoreException;
 
 import javax.inject.Inject;
 import javax.inject.Named;

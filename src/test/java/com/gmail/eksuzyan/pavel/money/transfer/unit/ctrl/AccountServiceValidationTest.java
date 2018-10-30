@@ -1,6 +1,7 @@
 package com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl;
 
-import com.gmail.eksuzyan.pavel.money.transfer.unit.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.money.transfer.ctrl.AccountService;
+import com.gmail.eksuzyan.pavel.money.transfer.model.AccountDatastore;
 import org.junit.Test;
 
 import java.util.concurrent.ConcurrentHashMap;
