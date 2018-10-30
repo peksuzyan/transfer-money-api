@@ -38,7 +38,7 @@ public class AccountWrapper {
      * @param number user account number
      * @param amount user account amount
      */
-    public AccountWrapper(String number, double amount) {
+    public AccountWrapper(String number, Double amount) {
         this.number = number;
         this.amount = amount;
     }

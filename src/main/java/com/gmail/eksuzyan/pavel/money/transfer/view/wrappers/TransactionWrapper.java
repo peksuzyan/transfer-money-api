@@ -45,7 +45,7 @@ public class TransactionWrapper {
      * @param destNum user account number where amount is deposited in
      * @param amount  amount of money to transfer
      */
-    public TransactionWrapper(String srcNum, String destNum, double amount) {
+    public TransactionWrapper(String srcNum, String destNum, Double amount) {
         this.srcNum = srcNum;
         this.destNum = destNum;
         this.amount = amount;

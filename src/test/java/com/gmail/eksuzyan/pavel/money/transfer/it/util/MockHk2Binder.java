@@ -25,7 +25,7 @@ public final class MockHk2Binder extends AbstractBinder {
 
     @Override
     protected void configure() {
-        bindFactory(StorageFactory.class).to(new TypeLiteral<ConcurrentMap<String, Account>>() {
+        bindFactory(SettableConcurrentMapFactory.class).to(new TypeLiteral<ConcurrentMap<String, Account>>() {
         }).named("storage");
 
         bindAsContract(AccountDatastore.class).in(Singleton.class);
@@ -34,7 +34,7 @@ public final class MockHk2Binder extends AbstractBinder {
         bindAsContract(AccountEndpoint.class).in(Singleton.class);
     }
 
-    private static class StorageFactory implements Factory<ConcurrentMap<String, Account>> {
+    private static class SettableConcurrentMapFactory implements Factory<ConcurrentMap<String, Account>> {
 
         @Override
         public ConcurrentMap<String, Account> provide() {

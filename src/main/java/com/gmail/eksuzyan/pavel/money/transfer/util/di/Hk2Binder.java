@@ -26,7 +26,7 @@ public final class Hk2Binder extends AbstractBinder {
      */
     @Override
     protected void configure() {
-        bindFactory(StorageFactory.class).to(new TypeLiteral<ConcurrentMap<String, Account>>() {
+        bindFactory(ConcurrentMapFactory.class).to(new TypeLiteral<ConcurrentMap<String, Account>>() {
         }).named("storage");
 
         bindAsContract(AccountDatastore.class).in(Singleton.class);
@@ -35,7 +35,7 @@ public final class Hk2Binder extends AbstractBinder {
         bindAsContract(AccountEndpoint.class).in(Singleton.class);
     }
 
-    private static class StorageFactory implements Factory<ConcurrentMap<String, Account>> {
+    private static class ConcurrentMapFactory implements Factory<ConcurrentMap<String, Account>> {
 
         @Override
         public ConcurrentMap<String, Account> provide() {
