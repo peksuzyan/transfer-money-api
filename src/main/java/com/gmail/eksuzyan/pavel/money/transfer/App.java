@@ -25,13 +25,19 @@ import static java.util.Objects.nonNull;
  */
 public class App {
 
-    private static final String SERVER_IP = "http://localhost";
+    private static final String SERVER_SCHEME = "http";
+    private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 9998;
 
+    private static final URI TEST_URI = UriBuilder.fromUri("")
+            .scheme(SERVER_SCHEME)
+            .host(SERVER_HOST)
+            .port(SERVER_PORT)
+            .build();
+
     public static void main(String[] args) {
-        URI baseUri = UriBuilder.fromUri(SERVER_IP).port(SERVER_PORT).build();
         ResourceConfig config = new JerseyConfig();
-        Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+        Server server = JettyHttpContainerFactory.createServer(TEST_URI, config);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             while (!Objects.equals(reader.readLine(), "stop")) {
