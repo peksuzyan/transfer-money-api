@@ -30,7 +30,7 @@ public class Postman {
                 .build();
     }
 
-    public void deliverCreateAccountReq(AccountWrapper acc) throws IOException {
+    public void deliverCreateAccountReq(AccountWrapper acc) {
         final Client client = ClientBuilder.newClient();
 
         Response response = client
@@ -46,7 +46,7 @@ public class Postman {
         client.close();
     }
 
-    public AccountWrapper deliverGetAccountReq(String accNum) throws IOException {
+    public AccountWrapper deliverGetAccountReq(String accNum) {
         final Client client = ClientBuilder.newClient();
 
         Response response = client
@@ -66,7 +66,7 @@ public class Postman {
         return acc;
     }
 
-    public AccountWrapper deliverDeleteAccountReq(String accNum) throws IOException {
+    public AccountWrapper deliverDeleteAccountReq(String accNum) {
         final Client client = ClientBuilder.newClient();
 
         Response response = client
@@ -86,7 +86,7 @@ public class Postman {
         return acc;
     }
 
-    public AccountsWrapper deliverTransferMoneyReq(TransactionWrapper tx) throws IOException {
+    public AccountsWrapper deliverTransferMoneyReq(TransactionWrapper tx) {
         final Client client = ClientBuilder.newClient();
 
         Response response = client
@@ -106,10 +106,10 @@ public class Postman {
         return accounts;
     }
 
-    private static void checkOnFailure(Response response) throws IOException {
+    private static void checkOnFailure(Response response) {
         if (response.getStatus() != 200) {
             Response.StatusType statusType = response.getStatusInfo();
-            throw new IOException(statusType.getStatusCode() + " - " + statusType.getReasonPhrase());
+            throw new RuntimeException(statusType.getStatusCode() + " - " + statusType.getReasonPhrase());
         }
     }
 

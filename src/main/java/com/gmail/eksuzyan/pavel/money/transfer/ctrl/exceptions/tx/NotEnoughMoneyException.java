@@ -9,8 +9,9 @@ import com.gmail.eksuzyan.pavel.money.transfer.model.entities.Account;
  */
 public class NotEnoughMoneyException extends BusinessException {
 
-    public NotEnoughMoneyException(Account srcAcc, Account destAcc) {
-        super("Not enough money to transfer from '" + srcAcc.getNumber() + "' to '" + destAcc.getNumber() + "'. ");
+    public NotEnoughMoneyException(Double amount, Account srcAcc, Account destAcc) {
+        super("Not enough money (" + amount + ") to transfer from '" + srcAcc.getNumber() +
+                "' (" + srcAcc.getAmount() + ") to '" + destAcc.getNumber() + "'. ");
     }
 
 }

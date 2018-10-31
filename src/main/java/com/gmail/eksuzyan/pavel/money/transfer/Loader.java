@@ -9,13 +9,13 @@ import static java.util.Objects.nonNull;
  * @author Pavel Eksuzian.
  *         Created: 10/31/2018.
  */
-public class AppLoader {
+public final class Loader {
 
     public static void main(String[] args) {
         try {
             run(args);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.out);
             System.out.println(getHelpInfo());
         }
     }
@@ -55,24 +55,25 @@ public class AppLoader {
             }
         }
 
-        try (AppLoaderRunner runner =
-                     createAppLoaderRunner(serverPort, accountsCount, transfersCount, randomizerInitState)) {
-            runner.start();
+        try (LoaderRunner loader =
+                     createLoaderRunner(
+                             serverPort, accountsCount, transfersCount, randomizerInitState)) {
+            loader.start();
         }
     }
 
-    private static AppLoaderRunner createAppLoaderRunner(int serverPort,
-                                                         int accountsCount,
-                                                         int transfersCount,
-                                                         Long randomizerInitState) {
+    private static LoaderRunner createLoaderRunner(int serverPort,
+                                                   int accountsCount,
+                                                   int transfersCount,
+                                                   Long randomizerInitState) {
         return nonNull(randomizerInitState)
-                ? new AppLoaderRunner(serverPort, accountsCount, transfersCount, randomizerInitState)
-                : new AppLoaderRunner(serverPort, accountsCount, transfersCount);
+                ? new LoaderRunner(serverPort, accountsCount, transfersCount, randomizerInitState)
+                : new LoaderRunner(serverPort, accountsCount, transfersCount);
     }
 
     private static String getHelpInfo() {
         return lineSeparator() +
-                "The following args have to be or might be specified: " + lineSeparator() + lineSeparator() +
+                "The following args have to be or might be specified: " + lineSeparator() +
                 "[serverPort] - server port (int, >=1000, mandatory) " + lineSeparator() +
                 "[accountsCount] - total accounts count (int, >1, mandatory) " + lineSeparator() +
                 "[transfersCount] - total transfers count (int, >0, mandatory) " + lineSeparator() +

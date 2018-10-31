@@ -24,9 +24,9 @@ import static java.util.Objects.nonNull;
  * Not thread-safe.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ * Created: 10/17/2018.
  */
-class AppLoaderRunner implements AutoCloseable {
+class LoaderRunner implements AutoCloseable {
 
     private static final String HEADLINE_PATTERN = "============== Requesting '%s' ==============";
     private static final Format ACC_NUM_FORMATTER = new DecimalFormat("ACC-0000");
@@ -52,7 +52,7 @@ class AppLoaderRunner implements AutoCloseable {
     private final Random randomizer;
 
     /**
-     * Creates an instance with passed accounts count and transfers count.
+     * Creates an instance with provided server port, accounts count and transfers count.
      * Initial state of pseudo-random generator is defined by inner implementation of {@link Random#Random()}.
      * Pseudo-random generator is used wherever random generated value is necessarily.
      *
@@ -61,12 +61,13 @@ class AppLoaderRunner implements AutoCloseable {
      * @param transfersCount transfers count
      * @throws IllegalArgumentException if server port < 1000, accounts count < 2 or transfers count < 1
      */
-    AppLoaderRunner(int serverPort, int accountsCount, int transfersCount) {
+    LoaderRunner(int serverPort, int accountsCount, int transfersCount) {
         this(serverPort, accountsCount, transfersCount, null);
     }
 
     /**
-     * Creates an instance with passed accounts count, transfers count and initial state of pseudo-random generator.
+     * Creates an instance with provided server port, accounts count, transfers count and
+     * initial state of pseudo-random generator.
      * Pseudo-random generator is used wherever random generated value is necessarily.
      *
      * @param serverPort          server port
@@ -75,11 +76,11 @@ class AppLoaderRunner implements AutoCloseable {
      * @param randomizerInitState initial state of pseudo-random generator
      * @throws IllegalArgumentException if server port < 1000, accounts count < 2 or transfers count < 1
      */
-    AppLoaderRunner(int serverPort, int accountsCount, int transfersCount, long randomizerInitState) {
+    LoaderRunner(int serverPort, int accountsCount, int transfersCount, long randomizerInitState) {
         this(serverPort, accountsCount, transfersCount, new Random(randomizerInitState));
     }
 
-    private AppLoaderRunner(int serverPort, int accountsCount, int transfersCount, Random randomizer) {
+    private LoaderRunner(int serverPort, int accountsCount, int transfersCount, Random randomizer) {
         if (serverPort < 1_000)
             throw new IllegalArgumentException("Server port is less than one thousand. ");
         if (accountsCount < 2)

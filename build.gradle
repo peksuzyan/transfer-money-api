@@ -37,7 +37,7 @@ jar {
         attributes 'Build-Gradle-Version': gradle.gradleVersion
         attributes 'Build-Jdk-Version': JavaVersion.current()
         attributes 'Build-Created': new Date().format('yyyy-MM-dd HH:mm')
-        attributes 'Main-Class': 'com.gmail.eksuzyan.pavel.money.transfer.AppServer'
+        attributes 'Main-Class': 'com.gmail.eksuzyan.pavel.money.transfer.Backend'
 //        attributes 'Class-Path': configurations.compile.collect { 'libs/' + it.getName() }.join(' ')
 //        attributes 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
     }

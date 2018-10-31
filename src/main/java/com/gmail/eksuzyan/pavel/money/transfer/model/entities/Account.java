@@ -117,7 +117,7 @@ public class Account {
      */
     private static void transfer(Account srcAcc, Account destAcc, Double amount) {
         if (srcAcc.getAmount() < amount)
-            throw new NotEnoughMoneyException(srcAcc, destAcc);
+            throw new NotEnoughMoneyException(amount, srcAcc, destAcc);
 
         srcAcc.amount -= amount;
         destAcc.amount += amount;
