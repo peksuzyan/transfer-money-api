@@ -1,6 +1,5 @@
 package com.gmail.eksuzyan.pavel.money.transfer;
 
-import com.gmail.eksuzyan.pavel.money.transfer.view.endpoints.acc.AccountEndpoint;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.acc.AccountWrapper;
 import com.gmail.eksuzyan.pavel.money.transfer.view.wrappers.tx.TransactionWrapper;
 
@@ -27,10 +26,10 @@ import static java.util.Objects.nonNull;
  * @author Pavel Eksuzian.
  *         Created: 10/17/2018.
  */
-class AppRunner implements AutoCloseable {
+class AppLoaderRunner implements AutoCloseable {
 
     private static final String HEADLINE_PATTERN = "============== Requesting '%s' ==============";
-    private static final Format ACCOUNT_NUMBER_FORMATTER = new DecimalFormat("ACC-0000");
+    private static final Format ACC_NUM_FORMATTER = new DecimalFormat("ACC-0000");
 
     private static final int MAX_INITIAL_AMOUNT = 100;
     private static final int MAX_TRANSFER_AMOUNT = 25;
@@ -38,11 +37,12 @@ class AppRunner implements AutoCloseable {
     private final AtomicLong totalInitialAmount = new AtomicLong();
     private final AtomicLong totalFiniteAmount = new AtomicLong();
 
-    private final AccountEndpoint rest = null;
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(16);
+    private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     private final int accountsCount;
     private final int transfersCount;
+
+    private final Postman postman;
 
     private final CountDownLatch latchOnCreate;
     private final CountDownLatch latchOnTransfer;
@@ -56,28 +56,32 @@ class AppRunner implements AutoCloseable {
      * Initial state of pseudo-random generator is defined by inner implementation of {@link Random#Random()}.
      * Pseudo-random generator is used wherever random generated value is necessarily.
      *
+     * @param serverPort     server port
      * @param accountsCount  accounts count
      * @param transfersCount transfers count
-     * @throws IllegalArgumentException if accounts count < 2 or transfers count < 1
+     * @throws IllegalArgumentException if server port < 1000, accounts count < 2 or transfers count < 1
      */
-    AppRunner(int accountsCount, int transfersCount) {
-        this(accountsCount, transfersCount, null);
+    AppLoaderRunner(int serverPort, int accountsCount, int transfersCount) {
+        this(serverPort, accountsCount, transfersCount, null);
     }
 
     /**
      * Creates an instance with passed accounts count, transfers count and initial state of pseudo-random generator.
      * Pseudo-random generator is used wherever random generated value is necessarily.
      *
+     * @param serverPort          server port
      * @param accountsCount       accounts count
      * @param transfersCount      transfers count
      * @param randomizerInitState initial state of pseudo-random generator
-     * @throws IllegalArgumentException if accounts count < 2 or transfers count < 1
+     * @throws IllegalArgumentException if server port < 1000, accounts count < 2 or transfers count < 1
      */
-    AppRunner(int accountsCount, int transfersCount, long randomizerInitState) {
-        this(accountsCount, transfersCount, new Random(randomizerInitState));
+    AppLoaderRunner(int serverPort, int accountsCount, int transfersCount, long randomizerInitState) {
+        this(serverPort, accountsCount, transfersCount, new Random(randomizerInitState));
     }
 
-    private AppRunner(int accountsCount, int transfersCount, Random randomizer) {
+    private AppLoaderRunner(int serverPort, int accountsCount, int transfersCount, Random randomizer) {
+        if (serverPort < 1_000)
+            throw new IllegalArgumentException("Server port is less than one thousand. ");
         if (accountsCount < 2)
             throw new IllegalArgumentException("Accounts count is less than two. ");
         if (transfersCount < 1)
@@ -85,6 +89,8 @@ class AppRunner implements AutoCloseable {
 
         this.accountsCount = accountsCount;
         this.transfersCount = transfersCount;
+
+        this.postman = new Postman(serverPort);
 
         this.latchOnCreate = new CountDownLatch(accountsCount);
         this.latchOnTransfer = new CountDownLatch(transfersCount);
@@ -114,7 +120,7 @@ class AppRunner implements AutoCloseable {
     private List<String> generateAccountNums() {
         return IntStream
                 .rangeClosed(1, accountsCount)
-                .mapToObj(ACCOUNT_NUMBER_FORMATTER::format)
+                .mapToObj(ACC_NUM_FORMATTER::format)
                 .collect(Collectors.toList());
     }
 
@@ -215,21 +221,23 @@ class AppRunner implements AutoCloseable {
     }
 
     private class CreateTask implements Runnable {
-        private final String number;
-        private final double initialAmount;
+        private final String accNum;
+        private final double accAmount;
 
-        CreateTask(String number, double initialAmount) {
-            this.number = number;
-            this.initialAmount = initialAmount;
+        CreateTask(String accNum, double accAmount) {
+            this.accNum = accNum;
+            this.accAmount = accAmount;
         }
 
         @Override
         public void run() {
+            AccountWrapper acc = new AccountWrapper(accNum, accAmount);
             try {
-                AccountWrapper account = null;
-//                AccountWrapper account = rest.createAccount(number, initialAmount);
-                System.out.println("Created: " + account);
-                totalInitialAmount.addAndGet(account.getAmount().longValue());
+                postman.deliverCreateAccountReq(acc);
+
+                totalInitialAmount.addAndGet(acc.getAmount().longValue());
+
+                System.out.println("Created: " + acc);
             } catch (Exception e) {
                 System.out.println("Not created: " + e);
             } finally {
@@ -239,22 +247,23 @@ class AppRunner implements AutoCloseable {
     }
 
     private class TransferTask implements Runnable {
-        private final String fromAccountNum;
-        private final String toAccountNum;
+        private final String srcNum;
+        private final String destNum;
         private final double amount;
 
-        TransferTask(String fromAccountNum, String toAccountNum, double amount) {
-            this.fromAccountNum = fromAccountNum;
-            this.toAccountNum = toAccountNum;
+        TransferTask(String srcNum, String destNum, double amount) {
+            this.srcNum = srcNum;
+            this.destNum = destNum;
             this.amount = amount;
         }
 
         @Override
         public void run() {
+            TransactionWrapper tx = new TransactionWrapper(srcNum, destNum, amount);
             try {
-                TransactionWrapper transaction = null;
-//                TransactionWrapper transaction = rest.transferMoney(fromAccountNum, toAccountNum, amount);
-                System.out.println("Transferred: " + transaction);
+                postman.deliverTransferMoneyReq(tx);
+
+                System.out.println("Transferred: " + tx);
             } catch (Exception e) {
                 System.out.println("Not transferred: " + e);
             } finally {
@@ -264,18 +273,20 @@ class AppRunner implements AutoCloseable {
     }
 
     private class GetTask implements Runnable {
-        private final String number;
+        private final String accNum;
 
-        GetTask(String number) {
-            this.number = number;
+        GetTask(String accNum) {
+            this.accNum = accNum;
         }
 
         @Override
         public void run() {
             try {
-                AccountWrapper account = rest.getAccount(number);
-                System.out.println("Got: " + account);
-                totalFiniteAmount.addAndGet(account.getAmount().longValue());
+                AccountWrapper acc = postman.deliverGetAccountReq(accNum);
+
+                totalFiniteAmount.addAndGet(acc.getAmount().longValue());
+
+                System.out.println("Got: " + acc);
             } catch (Exception e) {
                 System.out.println("Not got: " + e);
             } finally {
@@ -285,17 +296,18 @@ class AppRunner implements AutoCloseable {
     }
 
     private class DeleteTask implements Runnable {
-        private final String number;
+        private final String accNum;
 
-        DeleteTask(String number) {
-            this.number = number;
+        DeleteTask(String accNum) {
+            this.accNum = accNum;
         }
 
         @Override
         public void run() {
             try {
-                AccountWrapper account = rest.deleteAccount(number);
-                System.out.println("Deleted: " + account);
+                AccountWrapper acc = postman.deliverDeleteAccountReq(accNum);
+
+                System.out.println("Deleted: " + acc);
             } catch (Exception e) {
                 System.out.println("Not deleted: " + e);
             } finally {
