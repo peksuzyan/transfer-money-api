@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.gmail.eksuzyan.pavel'
+version = getProperty('app.version')
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile project(':transfer-money-media')
+    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.27'
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-jetty-http', version: '2.27'
+
+    testCompile group: 'org.glassfish.jersey.connectors', name: 'jersey-jetty-connector', version: '2.27'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    manifest {
+        attributes 'Build-Project': rootProject.name
+        attributes 'Build-Project-Name': project.name
+        attributes 'Build-Project-Group': project.group
+        attributes 'Build-Project-Version': project.version
+        attributes 'Build-By-Name-User': getProperty('app.built.by.user')
+        attributes 'Build-By-Name-Full': getProperty('app.built.by.name')
+        attributes 'Build-Gradle-Version': gradle.gradleVersion
+        attributes 'Build-Jdk-Version': JavaVersion.current()
+        attributes 'Build-Created': new Date().format('yyyy-MM-dd HH:mm')
+        attributes 'Main-Class': 'Backend'
+    }
+}

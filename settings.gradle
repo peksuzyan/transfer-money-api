@@ -1,1 +1,11 @@
-rootProject.name = 'TransferMoneyApi'
+rootProject.name = 'transfer-money'
+
+// Includes subprojects
+include "server"
+include "client"
+include "media"
+
+// Sets human-readable subproject names
+project(":server").name = "transfer-money-backend"
+project(":client").name = "transfer-money-loader"
+project(":media").name = "transfer-money-media"
