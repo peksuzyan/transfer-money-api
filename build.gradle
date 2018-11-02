@@ -1,3 +1,22 @@
-allprojects {
+apply plugin: 'project-report'
 
+subprojects { subproject ->
+    apply plugin: 'java'
+    apply plugin: 'project-report'
+
+    group = 'com.gmail.eksuzyan.pavel'
+    version = getProperty('app.version')
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    ext {
+        jerseyVersion = '2.27'
+        junitVersion = '4.12'
+    }
 }

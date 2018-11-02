@@ -1,22 +1,9 @@
-plugins {
-    id 'java'
-}
-
-group = 'com.gmail.eksuzyan.pavel'
-version = getProperty('app.version')
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
+//apply plugin: 'war'
 
 dependencies {
     compile project(':transfer-money-media')
-    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.27'
-    compile group: 'org.glassfish.jersey.connectors', name: 'jersey-jetty-connector', version: '2.27'
+    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jerseyVersion
+    compile group: 'org.glassfish.jersey.connectors', name: 'jersey-jetty-connector', version: jerseyVersion
 }
 
 jar {
@@ -29,11 +16,12 @@ jar {
         attributes 'Build-Project-Name': project.name
         attributes 'Build-Project-Group': project.group
         attributes 'Build-Project-Version': project.version
-        attributes 'Build-By-Name-User': getProperty('app.built.by.user')
-        attributes 'Build-By-Name-Full': getProperty('app.built.by.name')
+        attributes 'Build-By-Name-User': rootProject.getProperty('app.built.by.user')
+        attributes 'Build-By-Name-Full': rootProject.getProperty('app.built.by.name')
         attributes 'Build-Gradle-Version': gradle.gradleVersion
         attributes 'Build-Jdk-Version': JavaVersion.current()
         attributes 'Build-Created': new Date().format('yyyy-MM-dd HH:mm')
-        attributes 'Main-Class': 'com.gmail.eksuzyan.pavel.money.transfer.Backend'
+        attributes 'Main-Class': 'com.gmail.eksuzyan.pavel.transfer.money.client.Loader'
+//        attributes 'Class-Path': configurations.compile.collect { "lib/" + it.getName() }.join(' ')
     }
 }
