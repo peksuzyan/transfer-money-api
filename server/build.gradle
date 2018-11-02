@@ -10,9 +10,9 @@ dependencies {
 }
 
 jar {
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+//    from {
+//        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
 
     manifest {
         attributes 'Build-Project': rootProject.name
@@ -25,6 +25,6 @@ jar {
         attributes 'Build-Jdk-Version': JavaVersion.current()
         attributes 'Build-Created': new Date().format('yyyy-MM-dd HH:mm')
         attributes 'Main-Class': 'com.gmail.eksuzyan.pavel.transfer.money.server.Backend'
-//        attributes 'Class-Path': configurations.compile.collect { "lib/" + it.getName() }.join(' ')
+        attributes 'Class-Path': configurations.compile.collect { "lib/" + it.getName() }.join(' ')
     }
 }

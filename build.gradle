@@ -1,8 +1,8 @@
-apply plugin: 'project-report'
+//apply plugin: 'project-report'
 
 subprojects { subproject ->
     apply plugin: 'java'
-    apply plugin: 'project-report'
+//    apply plugin: 'project-report'
 
     group = 'com.gmail.eksuzyan.pavel'
     version = getProperty('app.version')
