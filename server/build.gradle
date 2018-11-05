@@ -1,5 +1,3 @@
-//apply plugin: 'war'
-
 dependencies {
     compile project(':transfer-money-media')
     compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jerseyVersion
@@ -10,10 +8,6 @@ dependencies {
 }
 
 jar {
-//    from {
-//        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-//    }
-
     manifest {
         attributes 'Build-Project': rootProject.name
         attributes 'Build-Project-Name': project.name
@@ -25,6 +19,6 @@ jar {
         attributes 'Build-Jdk-Version': JavaVersion.current()
         attributes 'Build-Created': new Date().format('yyyy-MM-dd HH:mm')
         attributes 'Main-Class': 'com.gmail.eksuzyan.pavel.transfer.money.server.Backend'
-        attributes 'Class-Path': configurations.compile.collect { "lib/" + it.getName() }.join(' ')
+        attributes 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
     }
 }

@@ -1,8 +1,16 @@
-//apply plugin: 'project-report'
+import org.apache.tools.ant.filters.ReplaceTokens
 
-subprojects { subproject ->
+ext {
+    project(":transfer-money-backend").ext.packageable = true
+    project(":transfer-money-loader").ext.packageable = true
+    project(":transfer-money-media").ext.packageable = false
+
+    jerseyVersion = '2.27'
+    junitVersion = '4.12'
+}
+
+subprojects { Project subproject ->
     apply plugin: 'java'
-//    apply plugin: 'project-report'
 
     group = 'com.gmail.eksuzyan.pavel'
     version = getProperty('app.version')
@@ -15,8 +23,43 @@ subprojects { subproject ->
         mavenLocal()
     }
 
-    ext {
-        jerseyVersion = '2.27'
-        junitVersion = '4.12'
+    if (subproject.packageable) {
+        ext {
+            deliveryName = subproject.name + '-' + subproject.version
+        }
+
+        task copyScripts(type: Copy, dependsOn: 'build') {
+            description "Replaces tokens into template scripts before they're copied"
+            group "Distribution"
+
+            from "${rootProject.projectDir}/dist/scripts"
+            into "${subproject.buildDir}/scripts"
+            rename 'run_template.bat', 'run.bat'
+            rename 'run_template.sh', 'run.sh'
+            filter(ReplaceTokens, tokens: [
+                    APP_NAME    : subproject.name,
+                    APP_DELIVERY: subproject.deliveryName])
+        }
+
+        task copyDependencies(type: Copy, dependsOn: 'copyScripts') {
+            description "Collects and copies dependencies before they're wrapped"
+            group "Distribution"
+
+            from configurations.compile
+            into "${subproject.buildDir}/libs"
+        }
+
+        task packageDelivery(type: Zip, dependsOn: 'copyDependencies') {
+            description "Wraps libs and scripts into delivery package"
+            group "Distribution"
+
+            from "${subproject.buildDir}/scripts"
+            from("${subproject.buildDir}/libs") {
+                into "libs"
+            }
+
+            destinationDir = file("${subproject.buildDir}/dist")
+            archiveName = "${subproject.deliveryName}.zip"
+        }
     }
 }
