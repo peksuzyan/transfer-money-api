@@ -1,5 +1,6 @@
-package com.gmail.eksuzyan.pavel.transfer.money.client;
+package com.gmail.eksuzyan.pavel.transfer.money.client.connector;
 
+import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.RestProperties;
 import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountWrapper;
 import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountsWrapper;
 import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.tx.TransactionWrapper;
@@ -17,16 +18,18 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  * @author Pavel Eksuzian.
  *         Created: 10/31/2018.
  */
-public class Postman {
+public final class LoaderConnector {
 
     private final URI uri;
 
-    public Postman(int serverPort) {
+    public LoaderConnector(RestProperties props) {
         this.uri = UriBuilder.fromUri("")
-                .scheme("http")
-                .host("localhost")
-                .port(serverPort)
+                .scheme(props.getServerScheme())
+                .host(props.getServerHost())
+                .port(props.getServerPort())
                 .build();
+
+        System.out.println("Load performs on " + uri);
     }
 
     public void deliverCreateAccountReq(AccountWrapper acc) {

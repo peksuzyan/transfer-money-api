@@ -1,5 +1,6 @@
 dependencies {
     compile project(':transfer-money-media')
+    compile project(':transfer-money-config')
     compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: jerseyVersion
     compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-jetty-http', version: jerseyVersion
 

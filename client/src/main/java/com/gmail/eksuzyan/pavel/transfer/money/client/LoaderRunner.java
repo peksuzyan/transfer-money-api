@@ -1,5 +1,7 @@
 package com.gmail.eksuzyan.pavel.transfer.money.client;
 
+import com.gmail.eksuzyan.pavel.transfer.money.client.connector.LoaderConnector;
+import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.RestProperties;
 import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountWrapper;
 import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.tx.TransactionWrapper;
 
@@ -42,7 +44,7 @@ class LoaderRunner implements AutoCloseable {
     private final int accountsCount;
     private final int transfersCount;
 
-    private final Postman postman;
+    private final LoaderConnector loaderConnector;
 
     private final CountDownLatch latchOnCreate;
     private final CountDownLatch latchOnTransfer;
@@ -52,36 +54,36 @@ class LoaderRunner implements AutoCloseable {
     private final Random randomizer;
 
     /**
-     * Creates an instance with provided server port, accounts count and transfers count.
+     * Creates an instance with provided connection properties, accounts count and transfers count.
      * Initial state of pseudo-random generator is defined by inner implementation of {@link Random#Random()}.
      * Pseudo-random generator is used wherever random generated value is necessarily.
      *
-     * @param serverPort     server port
+     * @param props          connection properties
      * @param accountsCount  accounts count
      * @param transfersCount transfers count
      * @throws IllegalArgumentException if server port < 1000, accounts count < 2 or transfers count < 1
      */
-    LoaderRunner(int serverPort, int accountsCount, int transfersCount) {
-        this(serverPort, accountsCount, transfersCount, null);
+    LoaderRunner(RestProperties props, int accountsCount, int transfersCount) {
+        this(props, accountsCount, transfersCount, null);
     }
 
     /**
-     * Creates an instance with provided server port, accounts count, transfers count and
+     * Creates an instance with provided connection properties, accounts count, transfers count and
      * initial state of pseudo-random generator.
      * Pseudo-random generator is used wherever random generated value is necessarily.
      *
-     * @param serverPort          server port
+     * @param props               connection properties
      * @param accountsCount       accounts count
      * @param transfersCount      transfers count
      * @param randomizerInitState initial state of pseudo-random generator
      * @throws IllegalArgumentException if server port < 1000, accounts count < 2 or transfers count < 1
      */
-    LoaderRunner(int serverPort, int accountsCount, int transfersCount, long randomizerInitState) {
-        this(serverPort, accountsCount, transfersCount, new Random(randomizerInitState));
+    LoaderRunner(RestProperties props, int accountsCount, int transfersCount, long randomizerInitState) {
+        this(props, accountsCount, transfersCount, new Random(randomizerInitState));
     }
 
-    private LoaderRunner(int serverPort, int accountsCount, int transfersCount, Random randomizer) {
-        if (serverPort < 1_000)
+    private LoaderRunner(RestProperties props, int accountsCount, int transfersCount, Random randomizer) {
+        if (props.getServerPort() < 1_000)
             throw new IllegalArgumentException("Server port is less than one thousand. ");
         if (accountsCount < 2)
             throw new IllegalArgumentException("Accounts count is less than two. ");
@@ -91,7 +93,7 @@ class LoaderRunner implements AutoCloseable {
         this.accountsCount = accountsCount;
         this.transfersCount = transfersCount;
 
-        this.postman = new Postman(serverPort);
+        this.loaderConnector = new LoaderConnector(props);
 
         this.latchOnCreate = new CountDownLatch(accountsCount);
         this.latchOnTransfer = new CountDownLatch(transfersCount);
@@ -234,7 +236,7 @@ class LoaderRunner implements AutoCloseable {
         public void run() {
             AccountWrapper acc = new AccountWrapper(accNum, accAmount);
             try {
-                postman.deliverCreateAccountReq(acc);
+                loaderConnector.deliverCreateAccountReq(acc);
 
                 totalInitialAmount.addAndGet(acc.getAmount().longValue());
 
@@ -262,7 +264,7 @@ class LoaderRunner implements AutoCloseable {
         public void run() {
             TransactionWrapper tx = new TransactionWrapper(srcNum, destNum, amount);
             try {
-                postman.deliverTransferMoneyReq(tx);
+                loaderConnector.deliverTransferMoneyReq(tx);
 
                 System.out.println("Transferred: " + tx);
             } catch (Exception e) {
@@ -283,7 +285,7 @@ class LoaderRunner implements AutoCloseable {
         @Override
         public void run() {
             try {
-                AccountWrapper acc = postman.deliverGetAccountReq(accNum);
+                AccountWrapper acc = loaderConnector.deliverGetAccountReq(accNum);
 
                 totalFiniteAmount.addAndGet(acc.getAmount().longValue());
 
@@ -306,7 +308,7 @@ class LoaderRunner implements AutoCloseable {
         @Override
         public void run() {
             try {
-                AccountWrapper acc = postman.deliverDeleteAccountReq(accNum);
+                AccountWrapper acc = loaderConnector.deliverDeleteAccountReq(accNum);
 
                 System.out.println("Deleted: " + acc);
             } catch (Exception e) {
