@@ -2,8 +2,8 @@ package com.gmail.eksuzyan.pavel.money.transfer.it.view;
 
 import com.gmail.eksuzyan.pavel.money.transfer.it.view.util.MockJerseyConfig;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.entities.Account;
-import com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.acc.AccountWrapper;
-import com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.acc.AccountsWrapper;
+import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountWrapper;
+import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountsWrapper;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;

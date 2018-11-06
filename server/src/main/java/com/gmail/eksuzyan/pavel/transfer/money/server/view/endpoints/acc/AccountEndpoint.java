@@ -4,8 +4,8 @@ import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.exceptions.BusinessException;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.entities.Account;
 import com.gmail.eksuzyan.pavel.transfer.money.server.view.endpoints.tx.TransactionEndpoint;
-import com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.acc.AccountWrapper;
-import com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.acc.AccountsWrapper;
+import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountWrapper;
+import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountsWrapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

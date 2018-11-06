@@ -1,4 +1,4 @@
-package com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.acc;
+package com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

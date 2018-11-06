@@ -1,8 +1,8 @@
 package com.gmail.eksuzyan.pavel.transfer.money.client;
 
-import com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.acc.AccountWrapper;
-import com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.acc.AccountsWrapper;
-import com.gmail.eksuzyan.pavel.transfer.money.media.json.wrappers.tx.TransactionWrapper;
+import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountWrapper;
+import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountsWrapper;
+import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.tx.TransactionWrapper;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
