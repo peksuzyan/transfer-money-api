@@ -4,14 +4,6 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Build-Project': rootProject.name
-        attributes 'Build-Project-Name': project.name
-        attributes 'Build-Project-Group': project.group
-        attributes 'Build-Project-Version': project.version
-        attributes 'Build-By-Name-User': rootProject.getProperty('app.built.by.user')
-        attributes 'Build-By-Name-Full': rootProject.getProperty('app.built.by.name')
-        attributes 'Build-Gradle-Version': gradle.gradleVersion
-        attributes 'Build-Jdk-Version': JavaVersion.current()
-        attributes 'Build-Created': new Date().format('yyyy-MM-dd HH:mm')
+        from(rootManifest)
     }
 }

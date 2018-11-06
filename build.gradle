@@ -4,6 +4,7 @@ ext {
     project(":transfer-money-backend").ext.packageable = true
     project(":transfer-money-loader").ext.packageable = true
     project(":transfer-money-media").ext.packageable = false
+    project(":transfer-money-config").ext.packageable = false
 
     jerseyVersion = '2.27'
     junitVersion = '4.12'
@@ -21,6 +22,20 @@ subprojects { Project subproject ->
     repositories {
         mavenCentral()
         mavenLocal()
+    }
+
+    ext {
+        rootManifest = manifest {
+            attributes 'Build-Project': rootProject.name
+            attributes 'Build-Project-Name': subproject.name
+            attributes 'Build-Project-Group': subproject.group
+            attributes 'Build-Project-Version': subproject.version
+            attributes 'Build-By-Name-User': rootProject.getProperty('app.built.by.user')
+            attributes 'Build-By-Name-Full': rootProject.getProperty('app.built.by.name')
+            attributes 'Build-Gradle-Version': gradle.gradleVersion
+            attributes 'Build-Jdk-Version': JavaVersion.current()
+            attributes 'Build-Created': new Date().format('yyyy-MM-dd HH:mm')
+        }
     }
 
     if (subproject.packageable) {

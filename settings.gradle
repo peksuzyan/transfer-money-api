@@ -4,8 +4,10 @@ rootProject.name = 'transfer-money'
 include "server"
 include "client"
 include "media"
+include "config"
 
 // Sets human-readable subproject names
 project(":server").name = "transfer-money-backend"
 project(":client").name = "transfer-money-loader"
 project(":media").name = "transfer-money-media"
+project(":config").name = "transfer-money-config"
