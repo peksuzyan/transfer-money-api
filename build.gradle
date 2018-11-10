@@ -43,7 +43,16 @@ subprojects { Project subproject ->
             deliveryName = subproject.name + '-' + subproject.version
         }
 
-        task copyScripts(type: Copy, dependsOn: 'build') {
+        task copyProperties(type: Copy, dependsOn: 'build') {
+            description "Prepares properties file before it's wrapped"
+            group "Distribution"
+
+            from "${rootProject.projectDir}/dist/properties"
+            into "${subproject.buildDir}/props"
+            rename 'template.properties', 'server.properties'
+        }
+
+        task copyScripts(type: Copy, dependsOn: 'copyProperties') {
             description "Replaces tokens into template scripts before they're copied"
             group "Distribution"
 
@@ -65,9 +74,10 @@ subprojects { Project subproject ->
         }
 
         task packageDelivery(type: Zip, dependsOn: 'copyDependencies') {
-            description "Wraps libs and scripts into delivery package"
+            description "Wraps all resources into delivery package"
             group "Distribution"
 
+            from "${subproject.buildDir}/props"
             from "${subproject.buildDir}/scripts"
             from("${subproject.buildDir}/libs") {
                 into "libs"
