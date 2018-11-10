@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Files.newOutputStream;
+import static java.util.Objects.nonNull;
 
 /**
  * Loads file properties and provides an access to rest-specific properties.
@@ -19,9 +20,12 @@ import static java.nio.file.Files.newOutputStream;
  * @author Pavel Eksuzian.
  * Created: 06.11.2018.
  */
-public final class LoadableRestProperties extends Properties implements RestProperties {
+public final class FileRestProperties extends Properties implements RestProperties {
 
-    private static final Path PROPERTIES_FILE_PATH = Paths.get("server.properties").toAbsolutePath();
+    private static final String PROPS_FILE_NAME = "propsFileName";
+
+    private static final Path DEFAULT_PROPS_FILE_PATH =
+            Paths.get("server.properties").toAbsolutePath();
 
     private static final String SERVER_SCHEME_PROP_NAME = "server.scheme";
     private static final String SERVER_HOST_PROP_NAME = "server.host";
@@ -32,7 +36,7 @@ public final class LoadableRestProperties extends Properties implements RestProp
      *
      * @throws IllegalStateException if any I/O errors occurred
      */
-    public LoadableRestProperties() {
+    public FileRestProperties() {
         boolean loaded = loadFileProps();
 
         putIfAbsent(SERVER_SCHEME_PROP_NAME, "http");
@@ -44,24 +48,31 @@ public final class LoadableRestProperties extends Properties implements RestProp
     }
 
     private void createNewFileProps() {
-        try (OutputStream os = newOutputStream(PROPERTIES_FILE_PATH)) {
+        try (OutputStream os = newOutputStream(DEFAULT_PROPS_FILE_PATH)) {
             store(os, null);
-            System.out.println("Default properties are written in " + PROPERTIES_FILE_PATH);
+            System.out.println("Default properties are written in " + DEFAULT_PROPS_FILE_PATH);
         } catch (IOException e) {
-            throw new IllegalStateException("Properties cannot be stored in " + PROPERTIES_FILE_PATH, e);
+            throw new IllegalStateException("Properties cannot be stored in " + DEFAULT_PROPS_FILE_PATH, e);
         }
     }
 
     private boolean loadFileProps() {
-        try (InputStream is = newInputStream(PROPERTIES_FILE_PATH)) {
+        Path propsFilePath = getPropertiesFilePath();
+        try (InputStream is = newInputStream(propsFilePath)) {
             load(is);
             return true;
         } catch (NoSuchFileException e) {
-            System.out.println("Properties file does not exist in " + PROPERTIES_FILE_PATH);
+            System.out.println("Properties file does not exist in " + propsFilePath);
             return false;
         } catch (IOException e) {
-            throw new IllegalStateException("Properties cannot be loaded from " + PROPERTIES_FILE_PATH, e);
+            throw new IllegalStateException("Properties cannot be loaded from " + propsFilePath, e);
         }
+    }
+
+    private Path getPropertiesFilePath() {
+        String fileName = System.getProperty(PROPS_FILE_NAME);
+
+        return nonNull(fileName) ? Paths.get(fileName) : DEFAULT_PROPS_FILE_PATH;
     }
 
     @Override

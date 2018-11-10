@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.transfer.money.client;
 
-import com.gmail.eksuzyan.pavel.transfer.money.client.connector.LoaderConnector;
+import com.gmail.eksuzyan.pavel.transfer.money.client.connector.HttpConnector;
 import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.RestProperties;
 import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.acc.AccountWrapper;
 import com.gmail.eksuzyan.pavel.transfer.money.util.media.json.tx.TransactionWrapper;
@@ -44,7 +44,7 @@ class LoaderRunner implements AutoCloseable {
     private final int accountsCount;
     private final int transfersCount;
 
-    private final LoaderConnector loaderConnector;
+    private final HttpConnector connector;
 
     private final CountDownLatch latchOnCreate;
     private final CountDownLatch latchOnTransfer;
@@ -93,7 +93,7 @@ class LoaderRunner implements AutoCloseable {
         this.accountsCount = accountsCount;
         this.transfersCount = transfersCount;
 
-        this.loaderConnector = new LoaderConnector(props);
+        this.connector = new HttpConnector(props);
 
         this.latchOnCreate = new CountDownLatch(accountsCount);
         this.latchOnTransfer = new CountDownLatch(transfersCount);
@@ -236,7 +236,7 @@ class LoaderRunner implements AutoCloseable {
         public void run() {
             AccountWrapper acc = new AccountWrapper(accNum, accAmount);
             try {
-                loaderConnector.deliverCreateAccountReq(acc);
+                connector.deliverCreateAccountReq(acc);
 
                 totalInitialAmount.addAndGet(acc.getAmount().longValue());
 
@@ -264,7 +264,7 @@ class LoaderRunner implements AutoCloseable {
         public void run() {
             TransactionWrapper tx = new TransactionWrapper(srcNum, destNum, amount);
             try {
-                loaderConnector.deliverTransferMoneyReq(tx);
+                connector.deliverTransferMoneyReq(tx);
 
                 System.out.println("Transferred: " + tx);
             } catch (Exception e) {
@@ -285,7 +285,7 @@ class LoaderRunner implements AutoCloseable {
         @Override
         public void run() {
             try {
-                AccountWrapper acc = loaderConnector.deliverGetAccountReq(accNum);
+                AccountWrapper acc = connector.deliverGetAccountReq(accNum);
 
                 totalFiniteAmount.addAndGet(acc.getAmount().longValue());
 
@@ -308,7 +308,7 @@ class LoaderRunner implements AutoCloseable {
         @Override
         public void run() {
             try {
-                AccountWrapper acc = loaderConnector.deliverDeleteAccountReq(accNum);
+                AccountWrapper acc = connector.deliverDeleteAccountReq(accNum);
 
                 System.out.println("Deleted: " + acc);
             } catch (Exception e) {

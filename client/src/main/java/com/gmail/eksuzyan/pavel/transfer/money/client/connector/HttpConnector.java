@@ -18,11 +18,11 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  * @author Pavel Eksuzian.
  *         Created: 10/31/2018.
  */
-public final class LoaderConnector {
+public final class HttpConnector {
 
     private final URI uri;
 
-    public LoaderConnector(RestProperties props) {
+    public HttpConnector(RestProperties props) {
         this.uri = UriBuilder.fromUri("")
                 .scheme(props.getServerScheme())
                 .host(props.getServerHost())

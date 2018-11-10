@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.transfer.money.server;
 
-import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.LoadableRestProperties;
+import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.FileRestProperties;
 import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.RestProperties;
 
 import java.io.BufferedReader;
@@ -16,7 +16,7 @@ public final class Backend {
 
     public static void main(String[] args) {
         try {
-            RestProperties props = new LoadableRestProperties();
+            RestProperties props = new FileRestProperties();
             BackendRunner backend = new BackendRunner(props);
             try {
                 waitForUserStop();

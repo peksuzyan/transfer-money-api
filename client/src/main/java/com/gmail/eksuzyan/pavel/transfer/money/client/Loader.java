@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.transfer.money.client;
 
-import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.LoadableRestProperties;
+import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.FileRestProperties;
 import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.RestProperties;
 
 import static java.lang.Integer.parseInt;
@@ -51,7 +51,7 @@ public final class Loader {
             }
         }
 
-        RestProperties props = new LoadableRestProperties();
+        RestProperties props = new FileRestProperties();
         try (LoaderRunner loader =
                      createLoaderRunner(props, accountsCount, transfersCount, randomizerInitState)) {
             loader.start();

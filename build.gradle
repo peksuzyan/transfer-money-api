@@ -49,7 +49,7 @@ subprojects { Project subproject ->
 
             from "${rootProject.projectDir}/dist/properties"
             into "${subproject.buildDir}/props"
-            rename 'template.properties', 'server.properties'
+            rename 'server_template.properties', 'server.properties'
         }
 
         task copyScripts(type: Copy, dependsOn: 'copyProperties') {
