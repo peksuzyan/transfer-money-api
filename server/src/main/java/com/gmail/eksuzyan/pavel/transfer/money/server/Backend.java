@@ -1,7 +1,7 @@
 package com.gmail.eksuzyan.pavel.transfer.money.server;
 
-import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.FileRestProperties;
 import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.RestProperties;
+import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.FileRestProperties;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,18 +10,15 @@ import java.io.InputStreamReader;
  * Entry point for simulating access and manipulation with RESTful API for user account processing.
  *
  * @author Pavel Eksuzian.
- * Created: 10/19/2018.
+ *         Created: 10/19/2018.
  */
 public final class Backend {
 
     public static void main(String[] args) {
         try {
             RestProperties props = new FileRestProperties();
-            BackendRunner backend = new BackendRunner(props);
-            try {
+            try (BackendRunner ignored = new BackendRunner(props)) {
                 waitForUserStop();
-            } finally {
-                backend.stop();
             }
         } catch (Exception e) {
             e.printStackTrace(System.out);

@@ -1,7 +1,7 @@
 package com.gmail.eksuzyan.pavel.transfer.money.client;
 
-import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.FileRestProperties;
 import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.RestProperties;
+import com.gmail.eksuzyan.pavel.transfer.money.util.cfg.file.FileRestProperties;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;

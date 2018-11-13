@@ -1,7 +1,9 @@
 package com.gmail.eksuzyan.pavel.transfer.money.server.util.di;
 
 import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.AccountService;
+import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.service.SensibleAccountService;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.transfer.money.server.model.datastore.MemoryAccountDatastore;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.entities.Account;
 import com.gmail.eksuzyan.pavel.transfer.money.server.view.endpoints.acc.AccountEndpoint;
 import com.gmail.eksuzyan.pavel.transfer.money.server.view.endpoints.tx.TransactionEndpoint;
@@ -29,8 +31,9 @@ public final class Hk2Binder extends AbstractBinder {
         bindFactory(ConcurrentMapFactory.class).to(new TypeLiteral<ConcurrentMap<String, Account>>() {
         }).named("storage");
 
-        bindAsContract(AccountDatastore.class).in(Singleton.class);
-        bindAsContract(AccountService.class).in(Singleton.class);
+        bind(MemoryAccountDatastore.class).to(AccountDatastore.class).in(Singleton.class);
+        bind(SensibleAccountService.class).to(AccountService.class).in(Singleton.class);
+
         bindAsContract(TransactionEndpoint.class).in(Singleton.class);
         bindAsContract(AccountEndpoint.class).in(Singleton.class);
     }

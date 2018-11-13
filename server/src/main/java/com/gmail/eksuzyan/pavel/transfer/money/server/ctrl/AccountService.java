@@ -1,48 +1,20 @@
 package com.gmail.eksuzyan.pavel.transfer.money.server.ctrl;
 
 import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.exceptions.acc.AccountExistsException;
-import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.exceptions.tx.NotEnoughMoneyException;
 import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.exceptions.acc.NotFoundAccountException;
-import com.gmail.eksuzyan.pavel.transfer.money.server.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.exceptions.tx.NotEnoughMoneyException;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.entities.Account;
-import com.gmail.eksuzyan.pavel.transfer.money.server.model.exceptions.DatastoreException;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
- * Provides ways to manipulate user accounts from the business point of view.
- * <p>
- * Unconditionally thread-safe.
+ * Describes ways to manipulate user accounts from the business point of view.
  *
  * @author Pavel Eksuzian.
- *         Created: 10/17/2018.
+ *         Created: 11/13/2018.
  */
-public class AccountService {
-
-    /**
-     * Underlying datastore.
-     */
-    private final AccountDatastore datastore;
-
-    /**
-     * Main constructor to build up service with passed datastore.
-     *
-     * @param datastore datastore
-     * @throws NullPointerException if datastore is null
-     */
-    @Inject
-    public AccountService(AccountDatastore datastore) {
-        this.datastore = requireNonNull(datastore);
-    }
+public interface AccountService {
 
     /**
      * Creates user account.
@@ -52,21 +24,7 @@ public class AccountService {
      * @throws IllegalArgumentException if account validation fails
      * @throws AccountExistsException   if user account already exists
      */
-    public void createAccount(String accNum, Double initAmount) {
-        if (accNum == null || accNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
-        if (initAmount == null || initAmount < 0)
-            throw new IllegalArgumentException("Initial amount cannot be null or negative. ");
-
-        Account acc = new Account(accNum, initAmount);
-
-        try {
-            datastore.createAccount(acc);
-        } catch (DatastoreException e) {
-            throw new AccountExistsException(acc, e);
-        }
-    }
+    void createAccount(String accNum, Double initAmount);
 
     /**
      * Gets user account by its number.
@@ -76,26 +34,14 @@ public class AccountService {
      * @throws IllegalArgumentException if account number validation fails
      * @throws NotFoundAccountException if user account is not found
      */
-    public Account getAccount(String accNum) {
-        if (accNum == null || accNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
-        try {
-            return datastore.getAccount(accNum);
-        } catch (DatastoreException e) {
-            throw new NotFoundAccountException(accNum, e);
-        }
-    }
+    Account getAccount(String accNum);
 
     /**
      * Gets all user accounts.
      *
      * @return user accounts as a map
      */
-    public Map<String, Account> getAllAccounts() {
-        return datastore.getAllAccounts().stream()
-                .collect(toMap(Account::getNumber, identity()));
-    }
+    Map<String, Account> getAllAccounts();
 
     /**
      * Updates user account amount to newer value.
@@ -106,23 +52,7 @@ public class AccountService {
      * @throws IllegalArgumentException if account validation fails
      * @throws NotFoundAccountException if user account is not found
      */
-    public Account updateAccount(String accNum, Double newAmount) {
-        if (accNum == null || accNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
-        if (newAmount == null)
-            throw new IllegalArgumentException("Account amount cannot be null. ");
-
-        try {
-            Account acc = datastore.getAccount(accNum);
-
-            acc.setAmount(newAmount);
-
-            return acc;
-        } catch (DatastoreException e) {
-            throw new NotFoundAccountException(accNum, e);
-        }
-    }
+    Account updateAccount(String accNum, Double newAmount);
 
     /**
      * Deletes user account.
@@ -132,20 +62,7 @@ public class AccountService {
      * @throws IllegalArgumentException if account number validation fails
      * @throws NotFoundAccountException if user account is not found
      */
-    public Account deleteAccount(String accNum) {
-        if (accNum == null || accNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
-        try {
-            Account acc = datastore.getAccount(accNum);
-
-            datastore.deleteAccount(acc);
-
-            return acc;
-        } catch (DatastoreException e) {
-            throw new NotFoundAccountException(accNum, e);
-        }
-    }
+    Account deleteAccount(String accNum);
 
     /**
      * Transfers amount of money between user accounts.
@@ -157,37 +74,6 @@ public class AccountService {
      * @throws NotFoundAccountException if any account is not found
      * @throws NotEnoughMoneyException  if source user account doesn't have enough amount
      */
-    public List<Account> transferMoney(String srcNum, String destNum, Double amount) {
-        if (srcNum == null || srcNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
-        if (destNum == null || destNum.trim().isEmpty())
-            throw new IllegalArgumentException("Account number cannot be null or empty. ");
-
-        if (Objects.equals(srcNum, destNum))
-            throw new IllegalArgumentException("Account numbers are the same. ");
-
-        if (amount == null || amount <= 0)
-            throw new IllegalArgumentException("Transfer amount cannot be negative or zero. ");
-
-        Account srcAcc;
-        try {
-            srcAcc = datastore.getAccount(srcNum);
-        } catch (DatastoreException e) {
-            throw new NotFoundAccountException(srcNum, e);
-        }
-
-        Account destAcc;
-        try {
-            destAcc = datastore.getAccount(destNum);
-        } catch (DatastoreException e) {
-            throw new NotFoundAccountException(destNum, e);
-        }
-
-        Account.transferAmount(srcAcc, destAcc, amount);
-
-        return Stream.of(srcAcc, destAcc).collect(toList());
-    }
-
+    List<Account> transferMoney(String srcNum, String destNum, Double amount);
 
 }

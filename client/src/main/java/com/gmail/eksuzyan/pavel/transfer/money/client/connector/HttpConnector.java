@@ -29,7 +29,7 @@ public final class HttpConnector {
                 .port(props.getServerPort())
                 .build();
 
-        System.out.println("Load performs on " + uri);
+        System.out.println("Load is performing on " + uri);
     }
 
     public void deliverCreateAccountReq(AccountWrapper acc) {

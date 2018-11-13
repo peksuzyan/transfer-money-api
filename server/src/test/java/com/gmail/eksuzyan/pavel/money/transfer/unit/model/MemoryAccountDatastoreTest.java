@@ -1,6 +1,6 @@
 package com.gmail.eksuzyan.pavel.money.transfer.unit.model;
 
-import com.gmail.eksuzyan.pavel.transfer.money.server.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.transfer.money.server.model.datastore.MemoryAccountDatastore;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.entities.Account;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.exceptions.DatastoreException;
 import org.junit.Test;
@@ -17,12 +17,12 @@ import static org.junit.Assert.assertNull;
  * @author Pavel Eksuzian.
  *         Created: 20.10.2018.
  */
-public class AccountDatastoreTest {
+public class MemoryAccountDatastoreTest {
 
     @Test
     public void testCreateAccountPositive() throws DatastoreException {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -37,7 +37,7 @@ public class AccountDatastoreTest {
     @Test(expected = DatastoreException.class)
     public void testCreateAccountThrowsAccountAlreadyExists() throws DatastoreException {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -50,7 +50,7 @@ public class AccountDatastoreTest {
     @Test
     public void testGetAccountPositive() throws DatastoreException {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -65,7 +65,7 @@ public class AccountDatastoreTest {
     @Test(expected = DatastoreException.class)
     public void testGetAccountThrowsAccountIsNotFound() throws DatastoreException {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         String num = "a111aa";
 
@@ -75,7 +75,7 @@ public class AccountDatastoreTest {
     @Test
     public void testGetAllAccountsPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -90,7 +90,7 @@ public class AccountDatastoreTest {
     @Test
     public void testGetAllAccountsNegative() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         List<Account> actual = datastore.getAllAccounts();
 
@@ -100,7 +100,7 @@ public class AccountDatastoreTest {
     @Test
     public void testDeleteAccountPositive() throws DatastoreException {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -116,7 +116,7 @@ public class AccountDatastoreTest {
     @Test(expected = DatastoreException.class)
     public void testDeleteAccountThrowsAccountIsNotFound() throws DatastoreException {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage);
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage);
 
         String num = "a111aa";
         Double initAmount = 1.0;

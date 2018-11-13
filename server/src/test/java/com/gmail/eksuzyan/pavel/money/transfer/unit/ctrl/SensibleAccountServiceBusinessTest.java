@@ -1,8 +1,8 @@
 package com.gmail.eksuzyan.pavel.money.transfer.unit.ctrl;
 
-import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.AccountService;
 import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.exceptions.BusinessException;
-import com.gmail.eksuzyan.pavel.transfer.money.server.model.AccountDatastore;
+import com.gmail.eksuzyan.pavel.transfer.money.server.ctrl.service.SensibleAccountService;
+import com.gmail.eksuzyan.pavel.transfer.money.server.model.datastore.MemoryAccountDatastore;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.entities.Account;
 import com.gmail.eksuzyan.pavel.transfer.money.server.model.exceptions.DatastoreException;
 import org.junit.Test;
@@ -18,14 +18,14 @@ import static org.junit.Assert.assertTrue;
  * Unit testing.
  *
  * @author Pavel Eksuzian.
- * Created: 20.10.2018.
+ *         Created: 20.10.2018.
  */
-public class AccountServiceBusinessTest {
+public class SensibleAccountServiceBusinessTest {
 
     @Test
     public void testCreateAccountPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -42,13 +42,13 @@ public class AccountServiceBusinessTest {
     @Test(expected = BusinessException.class)
     public void testCreateAccountThrowsCouldNotCreateAccount() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage) {
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage) {
             @Override
             public void createAccount(Account newAcc) throws DatastoreException {
                 throw new DatastoreException("Account already exists. ");
             }
         };
-        AccountService service = new AccountService(datastore);
+        SensibleAccountService service = new SensibleAccountService(datastore);
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -59,7 +59,7 @@ public class AccountServiceBusinessTest {
     @Test
     public void testGetAccountPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -76,13 +76,13 @@ public class AccountServiceBusinessTest {
     @Test(expected = BusinessException.class)
     public void testGetAccountThrowsCouldNotGetAccount() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage) {
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage) {
             @Override
             public Account getAccount(String accNum) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };
-        AccountService service = new AccountService(datastore);
+        SensibleAccountService service = new SensibleAccountService(datastore);
 
         String num = "a111aa";
 
@@ -92,7 +92,7 @@ public class AccountServiceBusinessTest {
     @Test
     public void testGetAllAccountsPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -106,7 +106,7 @@ public class AccountServiceBusinessTest {
     @Test
     public void testGetAllAccountsNegative() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         Map<String, Account> actual = service.getAllAccounts();
 
@@ -116,7 +116,7 @@ public class AccountServiceBusinessTest {
     @Test
     public void testDeleteAccountPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -133,13 +133,13 @@ public class AccountServiceBusinessTest {
     @Test(expected = BusinessException.class)
     public void testDeleteAccountThrowsCouldNotDeleteAccount() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage) {
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage) {
             @Override
             public void deleteAccount(Account acc) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };
-        AccountService service = new AccountService(datastore);
+        SensibleAccountService service = new SensibleAccountService(datastore);
 
         String num = "a111aa";
 
@@ -149,7 +149,7 @@ public class AccountServiceBusinessTest {
     @Test
     public void testUpdateAccountPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         String num = "a111aa";
         Double initAmount = 1.0;
@@ -167,13 +167,13 @@ public class AccountServiceBusinessTest {
     @Test(expected = BusinessException.class)
     public void testUpdateAccountThrowsCouldNotUpdateAccount() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage) {
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage) {
             @Override
             public Account getAccount(String accNum) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };
-        AccountService service = new AccountService(datastore);
+        SensibleAccountService service = new SensibleAccountService(datastore);
 
         String num = "a111aa";
 
@@ -183,7 +183,7 @@ public class AccountServiceBusinessTest {
     @Test
     public void testTransferMoneyPositive() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         String num1 = "a111aa";
         String num2 = "b222bb";
@@ -206,13 +206,13 @@ public class AccountServiceBusinessTest {
     @Test(expected = BusinessException.class)
     public void testTransferMoneyThrowsCouldNotFoundAccount() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountDatastore datastore = new AccountDatastore(storage) {
+        MemoryAccountDatastore datastore = new MemoryAccountDatastore(storage) {
             @Override
             public Account getAccount(String accNum) throws DatastoreException {
                 throw new DatastoreException("Account is not found. ");
             }
         };
-        AccountService service = new AccountService(datastore);
+        SensibleAccountService service = new SensibleAccountService(datastore);
 
         String num1 = "a111aa";
         String num2 = "b222bb";
@@ -227,7 +227,7 @@ public class AccountServiceBusinessTest {
     @Test(expected = BusinessException.class)
     public void testTransferMoneyThrowsNotEnoughMoney() {
         ConcurrentHashMap<String, Account> storage = new ConcurrentHashMap<>();
-        AccountService service = new AccountService(new AccountDatastore(storage));
+        SensibleAccountService service = new SensibleAccountService(new MemoryAccountDatastore(storage));
 
         String num1 = "a111aa";
         String num2 = "b222bb";

@@ -10,9 +10,9 @@ import java.net.URI;
 
 /**
  * @author Pavel Eksuzian.
- * Created: 31.10.2018.
+ *         Created: 31.10.2018.
  */
-class BackendRunner {
+class BackendRunner implements AutoCloseable {
 
     private final Server server;
 
@@ -31,7 +31,8 @@ class BackendRunner {
         System.out.println("Server started on " + serverUri);
     }
 
-    void stop() throws Exception {
+    @Override
+    public void close() throws Exception {
         if (!server.isStopping() && !server.isStopped())
             server.stop();
 

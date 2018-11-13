@@ -18,7 +18,7 @@ import static java.util.Objects.nonNull;
  * Loads file properties and provides an access to rest-specific properties.
  *
  * @author Pavel Eksuzian.
- * Created: 06.11.2018.
+ *         Created: 06.11.2018.
  */
 public final class FileRestProperties extends Properties implements RestProperties {
 

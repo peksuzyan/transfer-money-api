@@ -6,12 +6,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 
 /**
  * @author Pavel Eksuzian.
- * Created: 10/30/2018.
+ *         Created: 10/30/2018.
  */
 public class ExceptionHandler implements ExceptionMapper<Throwable> {
 
